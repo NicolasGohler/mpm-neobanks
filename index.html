@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neobank Playbook · MPM Labs</title>
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.bunny.net/css?family=nohemi:300,400,500,600,700&display=swap" rel="stylesheet">
+<style>
+/* ── MPM brand tokens ── */
+:root {
+  --bg:     #0b0b0b;
+  --bg2:    #111111;
+  --bg3:    #181818;
+  --ink:    #ffffffe6;
+  --ink2:   #ffffff8f;
+  --ink3:   #ffffff57;
+  --ink4:   #ffffff2e;
+  --line:   #ffffff12;
+  --line2:  #ffffff24;
+  --purple: #a53eff;
+  --violet: #c88bff;
+  --pink:   #7a1fd6;
+  --grad:   linear-gradient(100deg,#a53eff,#c88bff 45%,#7a1fd6);
+  --r:      4px;
+  --r-lg:   8px;
+  --pad:    clamp(20px,4.5vw,64px);
+  --wrap:   1200px;
+  --sans:   "Nohemi","Space Grotesk",system-ui,sans-serif;
+}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#f4f4f6;--bg2:#ffffff;--bg3:#ececf0;
+  --ink:rgba(10,10,10,.92);--ink2:rgba(10,10,10,.55);
+  --ink3:rgba(10,10,10,.35);--ink4:rgba(10,10,10,.14);
+  --line:rgba(10,10,10,.07);--line2:rgba(10,10,10,.13);
+  --purple:#7a1fd6;--violet:#a53eff;
+}}
+:root[data-theme="dark"]{
+  --bg:#0b0b0b;--bg2:#111111;--bg3:#181818;
+  --ink:#ffffffe6;--ink2:#ffffff8f;--ink3:#ffffff57;--ink4:#ffffff2e;
+  --line:#ffffff12;--line2:#ffffff24;--purple:#a53eff;--violet:#c88bff;
+}
+:root[data-theme="light"]{
+  --bg:#f4f4f6;--bg2:#ffffff;--bg3:#ececf0;
+  --ink:rgba(10,10,10,.92);--ink2:rgba(10,10,10,.55);
+  --ink3:rgba(10,10,10,.35);--ink4:rgba(10,10,10,.14);
+  --line:rgba(10,10,10,.07);--line2:rgba(10,10,10,.13);
+  --purple:#7a1fd6;--violet:#a53eff;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;min-height:100vh;
+}
+a{text-decoration:none;color:inherit;}
+
+.g{
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ═══════════════════ NAV ═══════════════════ */
+.nav{
+  position:sticky;top:0;z-index:200;height:62px;
+  background:rgba(11,11,11,.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line2);
+  display:flex;align-items:center;
+  padding:0 var(--pad);gap:0;
+}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]) .nav{background:rgba(244,244,246,.92);}}
+:root[data-theme="light"] .nav{background:rgba(244,244,246,.92);}
+
+.nav-logo{
+  display:flex;align-items:center;flex-shrink:0;
+  margin-right:32px;
+}
+.nav-logo img{height:28px;width:auto;display:block;filter:brightness(1);}
+
+.nav-icps{
+  display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none;
+}
+.nav-icps::-webkit-scrollbar{display:none;}
+
+.ntab{
+  font-family:var(--sans);font-size:12.5px;font-weight:500;
+  color:var(--ink2);background:none;border:none;cursor:pointer;
+  padding:7px 16px;border-radius:20px;
+  transition:color .15s,background .15s;white-space:nowrap;
+}
+.ntab:hover{color:var(--ink);background:var(--line2);}
+.ntab.on{color:var(--ink);background:rgba(165,62,255,.16);}
+.ntab:focus-visible{outline:2px solid var(--purple);outline-offset:2px;}
+
+.nav-divider{width:1px;background:var(--line2);margin:12px 16px;flex-shrink:0;}
+
+.nav-gtm{
+  font-family:var(--sans);font-size:12px;font-weight:500;
+  color:var(--violet);background:none;
+  border:1px solid rgba(165,62,255,.35);
+  border-radius:20px;cursor:pointer;
+  padding:6px 16px;white-space:nowrap;flex-shrink:0;
+  transition:background .15s,color .15s;
+}
+.nav-gtm:hover{background:rgba(165,62,255,.1);}
+.nav-gtm.on{background:rgba(165,62,255,.15);color:var(--ink);}
+.nav-gtm:focus-visible{outline:2px solid var(--purple);outline-offset:2px;}
+
+/* ═══════════════════ SECTIONS ═══════════════════ */
+.sec{display:none;}
+.sec.on{display:block;}
+
+.w{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad);}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  border:none;border-radius:var(--r);cursor:pointer;
+  font-family:var(--sans);font-size:13.5px;font-weight:500;
+  padding:12px 24px;transition:opacity .15s,transform .15s;
+  text-decoration:none;letter-spacing:.01em;
+}
+.btn-p{background:var(--grad);color:#fff;}
+.btn-p:hover{opacity:.85;transform:translateY(-1px);}
+.btn-o{background:none;color:var(--ink2);border:1px solid var(--line2);}
+.btn-o:hover{color:var(--ink);border-color:var(--line2);}
+
+/* ═══════════════════ HOME ═══════════════════ */
+
+/* hero */
+.hero{
+  padding:88px 0 72px;
+  border-bottom:1px solid var(--line);
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:24px;
+}
+.hero-tag::before{content:'';width:20px;height:1px;background:var(--purple);}
+.hero-h{
+  font-size:clamp(52px,7vw,88px);font-weight:700;
+  line-height:1.02;letter-spacing:-.035em;
+  color:var(--ink);margin-bottom:22px;
+}
+.hero-sub{
+  font-size:clamp(16px,1.6vw,18px);font-weight:300;
+  color:var(--ink2);max-width:44ch;line-height:1.7;margin-bottom:36px;
+}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;}
+
+/* clients */
+.clients{padding:32px 0;border-bottom:1px solid var(--line);}
+.clients-lbl{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:16px;}
+.clients-row{display:flex;flex-wrap:wrap;gap:0;}
+.cname{
+  font-size:13px;font-weight:600;color:var(--ink3);
+  padding:6px 24px;border-right:1px solid var(--line2);
+  letter-spacing:.02em;transition:color .15s;white-space:nowrap;
+}
+.cname:first-child{padding-left:0;}
+.cname:last-child{border-right:none;}
+.cname:hover{color:var(--ink2);}
+
+/* ── 3 ICP cards ── */
+.icps{padding:64px 0 0;}
+.icps-label{
+  font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:10px;
+}
+.icps-h{
+  font-size:clamp(22px,2.5vw,28px);font-weight:600;
+  letter-spacing:-.02em;color:var(--ink);margin-bottom:32px;
+}
+.icps-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border:1px solid var(--line2);border-radius:var(--r-lg);overflow:hidden;
+}
+@media(max-width:720px){.icps-row{grid-template-columns:1fr;}}
+
+.icard{
+  background:var(--bg2);padding:32px 28px 28px;
+  border-right:1px solid var(--line2);
+  cursor:pointer;transition:background .18s;
+  display:flex;flex-direction:column;gap:12px;
+  position:relative;
+}
+.icard:last-child{border-right:none;}
+@media(max-width:720px){.icard{border-right:none;border-bottom:1px solid var(--line2);}
+.icard:last-child{border-bottom:none;}}
+.icard:hover,.icard:focus-visible{background:var(--bg3);}
+.icard:focus-visible{outline:2px solid var(--purple);outline-offset:-2px;}
+
+.icard-num{
+  font-size:10px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink4);
+}
+.icard-tag{
+  font-size:10px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--purple);
+}
+.icard-title{
+  font-size:18px;font-weight:600;color:var(--ink);
+  line-height:1.25;letter-spacing:-.015em;
+}
+.icard-desc{
+  font-size:13px;font-weight:300;color:var(--ink2);
+  line-height:1.7;flex:1;
+}
+.icard-cta{
+  font-size:12px;font-weight:500;color:var(--violet);
+  letter-spacing:.02em;margin-top:4px;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* ── GTM strip ── */
+.gtm-strip{
+  margin:2px 0 0;
+  border:1px solid rgba(165,62,255,.22);border-top:none;
+  border-radius:0 0 var(--r-lg) var(--r-lg);
+  background:rgba(165,62,255,.06);
+  padding:22px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  flex-wrap:wrap;cursor:pointer;transition:background .18s;
+}
+.gtm-strip:hover{background:rgba(165,62,255,.1);}
+.gtm-strip-left{display:flex;align-items:center;gap:16px;}
+.gtm-strip-icon{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:14px;
+}
+.gtm-strip-lbl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--violet);margin-bottom:2px;}
+.gtm-strip-title{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.01em;}
+.gtm-strip-desc{font-size:13px;font-weight:300;color:var(--ink2);}
+.gtm-strip-action{
+  font-size:12px;font-weight:500;color:var(--violet);
+  border:1px solid rgba(165,62,255,.35);border-radius:20px;
+  padding:7px 18px;white-space:nowrap;flex-shrink:0;
+  transition:background .15s;
+}
+.gtm-strip:hover .gtm-strip-action{background:rgba(165,62,255,.12);}
+
+/* proof stats */
+.proof{padding:64px 0;border-top:1px solid var(--line);}
+.proof-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border:1px solid var(--line2);border-radius:var(--r-lg);overflow:hidden;
+}
+@media(max-width:640px){.proof-row{grid-template-columns:1fr;}}
+.pstat{
+  background:var(--bg2);padding:28px 28px 24px;
+  border-right:1px solid var(--line2);
+}
+.pstat:last-child{border-right:none;}
+@media(max-width:640px){.pstat{border-right:none;border-bottom:1px solid var(--line2);}
+.pstat:last-child{border-bottom:none;}}
+.pstat-client{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;}
+.pstat-n{
+  font-size:clamp(34px,4vw,48px);font-weight:700;
+  letter-spacing:-.03em;line-height:1;color:var(--ink);
+  margin-bottom:10px;font-variant-numeric:tabular-nums;
+}
+.pstat-desc{font-size:13px;font-weight:300;color:var(--ink2);line-height:1.6;}
+
+/* home cta */
+.hcta{padding:0 0 72px;}
+.hcta-box{
+  border:1px solid var(--line2);border-radius:var(--r-lg);
+  background:var(--bg2);padding:44px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:28px;flex-wrap:wrap;
+}
+.hcta-box h2{
+  font-size:clamp(20px,2.2vw,26px);font-weight:600;
+  letter-spacing:-.02em;color:var(--ink);margin-bottom:6px;
+}
+.hcta-box p{font-size:14px;font-weight:300;color:var(--ink2);}
+
+/* ═══════════════════ SUBPAGES (shared) ═══════════════════ */
+.sub{padding:60px 0 80px;}
+.sub-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:12px;
+}
+.sub-title{
+  font-size:clamp(30px,4.5vw,52px);font-weight:700;
+  line-height:1.06;letter-spacing:-.03em;color:var(--ink);
+  margin-bottom:12px;text-wrap:balance;max-width:22ch;
+}
+.sub-lead{
+  font-size:15px;font-weight:300;color:var(--ink2);
+  max-width:58ch;line-height:1.8;margin-bottom:48px;
+}
+
+/* meta pair */
+.mpair{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--line2);border-radius:var(--r-lg);
+  overflow:hidden;margin-bottom:48px;
+}
+@media(max-width:600px){.mpair{grid-template-columns:1fr;}}
+.mbox{background:var(--bg2);padding:22px 26px;border-right:1px solid var(--line2);}
+.mbox:last-child{border-right:none;}
+@media(max-width:600px){.mbox{border-right:none;border-bottom:1px solid var(--line2);}
+.mbox:last-child{border-bottom:none;}}
+.mbox-lbl{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;}
+.mbox-body{font-size:13.5px;font-weight:300;color:var(--ink2);line-height:1.75;}
+
+/* inline stats */
+.istats{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 48px;}
+.ist{background:var(--bg2);border:1px solid var(--line2);border-radius:var(--r);padding:14px 20px;}
+.ist-n{font-size:24px;font-weight:700;color:var(--ink);letter-spacing:-.025em;line-height:1;margin-bottom:4px;font-variant-numeric:tabular-nums;}
+.ist-l{font-size:9.5px;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;}
+
+/* channels list */
+.ch-head{
+  font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink3);padding-bottom:14px;border-bottom:1px solid var(--line2);
+}
+.ch{padding:26px 0;border-bottom:1px solid var(--line);}
+.ch:last-of-type{border-bottom:none;}
+.ch-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.cbadge{
+  font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--purple);background:rgba(165,62,255,.12);
+  padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;
+}
+.ch-name{font-size:18px;font-weight:600;color:var(--ink);letter-spacing:-.015em;}
+.ch-body{font-size:14px;font-weight:300;color:var(--ink2);line-height:1.8;max-width:68ch;}
+.ch-body strong{color:var(--ink);font-weight:500;}
+.ch-body p+p{margin-top:12px;}
+
+/* opportunity list */
+.olist{display:flex;flex-direction:column;gap:8px;margin:28px 0;}
+.orow{
+  display:grid;grid-template-columns:28px 1fr;gap:18px;align-items:flex-start;
+  background:var(--bg2);border:1px solid var(--line2);border-radius:var(--r);padding:16px 20px;
+}
+.onum{font-size:14px;font-weight:700;color:var(--purple);opacity:.45;font-variant-numeric:tabular-nums;line-height:1.6;}
+.oc h4{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+.oc p{font-size:13px;font-weight:300;color:var(--ink2);line-height:1.65;}
+
+/* sub CTA */
+.scta{
+  margin-top:52px;background:var(--bg2);border:1px solid var(--line2);
+  border-radius:var(--r-lg);padding:28px 32px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+}
+.scta h3{font-size:17px;font-weight:600;color:var(--ink);margin-bottom:3px;letter-spacing:-.01em;}
+.scta p{font-size:13px;font-weight:300;color:var(--ink2);}
+
+/* web2 inline scope CTA */
+.w2-scope{font-size:13px;color:var(--ink3);margin:-20px 0 44px;font-weight:300;}
+.w2-scope a{color:var(--green, #4A7C59);text-decoration:none;font-weight:500;}
+.w2-scope a:hover{text-decoration:underline;}
+
+/* entry paths (web2 section) */
+#web2{--brass:#4A7C59;}
+#b2b .epath-num{color:var(--purple);}
+#web2 .istats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;flex-wrap:unset;border-bottom:1px solid var(--line2);margin-bottom:48px;}
+#web2 .ist{background:none;border:none;border-radius:0;border-right:1px solid var(--line2);padding:20px 24px 20px 0;}
+#web2 .ist:last-child{border-right:none;}
+#web2 .ist-n{font-size:28px;letter-spacing:-.035em;color:var(--ink);}
+#web2 .ist-l{font-size:10px;line-height:1.4;}
+#web2 .mbox-lbl{color:var(--brass);}
+#web2 .mbox{border-top:2px solid var(--brass);border-radius:0 0 var(--r-lg) var(--r-lg);}
+@media(max-width:640px){#web2 .istats{grid-template-columns:1fr 1fr;}}
+.ep-hd{
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--brass);margin:0 0 2px;padding:0 0 14px;opacity:.8;
+}
+.epaths{
+  display:grid;grid-template-columns:1fr 1fr;
+  background:var(--line2);gap:1px;
+  border:1px solid var(--line2);border-radius:var(--r-lg);
+  overflow:hidden;margin:2px 0 48px;
+}
+.epath{background:var(--bg2);padding:20px 20px 16px;}
+@media(max-width:640px){.epaths{grid-template-columns:1fr;}}
+.epath-num{
+  font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--brass);margin-bottom:8px;
+}
+.epath-name{font-size:13.5px;font-weight:600;color:var(--ink);letter-spacing:-.01em;margin-bottom:7px;}
+.epath-thesis{font-size:12.5px;font-weight:300;color:var(--ink2);line-height:1.65;margin-bottom:14px;}
+.epath-facts{border-top:1px solid var(--line2);padding-top:0;}
+.epf{display:grid;grid-template-columns:72px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--line2);}
+.epf:last-child{border-bottom:none;}
+.epf-l{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--brass);opacity:.65;padding-top:2px;}
+.epf-v{font-size:11.5px;font-weight:300;color:var(--ink2);line-height:1.45;}
+/* web2 motion rows (services) */
+.motions{margin:32px 0 48px;}
+.motion{
+  display:grid;grid-template-columns:108px 1fr;gap:24px;
+  padding:20px 0;border-top:1px solid var(--line);align-items:start;
+  border-left:2px solid transparent;
+  transition:border-left-color .18s,padding-left .18s;
+}
+.motion:last-child{border-bottom:1px solid var(--line);}
+.motion:hover{border-left-color:var(--brass);padding-left:10px;}
+@media(max-width:600px){.motion{grid-template-columns:1fr;gap:5px;}}
+.m-tag{font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);opacity:.75;padding-top:3px;}
+.m-h{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.01em;margin-bottom:7px;}
+.m-body{font-size:13.5px;font-weight:300;color:var(--ink2);line-height:1.78;}
+.m-body p+p{margin-top:10px;}
+
+/* ═══════════════════ GTM PLAYBOOK (distinct layout) ═══════════════════ */
+#gtm .sub{padding:0;}
+.gtm-hero{
+  padding:56px 0 48px;
+  border-bottom:1px solid var(--line);
+  background:var(--bg);
+}
+.gtm-hero-tag{
+  display:inline-block;font-size:10px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--purple);margin-bottom:12px;
+}
+.gtm-hero-h{
+  font-size:clamp(28px,4vw,46px);font-weight:700;
+  letter-spacing:-.03em;line-height:1.06;color:var(--ink);
+  margin-bottom:10px;text-wrap:balance;
+}
+.gtm-hero-sub{
+  font-size:14px;font-weight:300;color:var(--ink2);
+  max-width:52ch;line-height:1.8;
+}
+
+/* two channel columns */
+.gtm-cols{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--line2);border-radius:var(--r-lg);
+  overflow:hidden;margin:40px 0;
+}
+@media(max-width:680px){.gtm-cols{grid-template-columns:1fr;}}
+.gtm-col{background:var(--bg2);padding:32px;border-right:1px solid var(--line2);}
+.gtm-col:last-child{border-right:none;}
+@media(max-width:680px){.gtm-col{border-right:none;border-bottom:1px solid var(--line2);}
+.gtm-col:last-child{border-bottom:none;}}
+.gtm-col-top{border-bottom:1px solid var(--line2);padding-bottom:16px;margin-bottom:20px;}
+.gtm-col-lbl{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:4px;}
+.gtm-col-h{font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.01em;}
+.gtm-item{margin-bottom:16px;}
+.gtm-item:last-child{margin-bottom:0;}
+.gtm-item-name{
+  font-size:13px;font-weight:600;color:var(--ink);
+  display:flex;align-items:center;gap:8px;margin-bottom:3px;
+}
+.gtm-item-name::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--purple);flex-shrink:0;}
+.gtm-item-desc{font-size:13px;font-weight:300;color:var(--ink2);line-height:1.65;padding-left:12px;}
+
+/* bridge box */
+.bridge{
+  background:rgba(165,62,255,.06);border:1px solid rgba(165,62,255,.2);
+  border-radius:var(--r-lg);padding:28px 32px;margin:0 0 40px;
+}
+.bridge h3{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:10px;letter-spacing:-.01em;}
+.bridge p{font-size:14px;font-weight:300;color:var(--ink2);line-height:1.8;max-width:62ch;}
+.bridge p+p{margin-top:10px;}
+
+.pstat-logo{height:28px;margin-bottom:12px;display:flex;align-items:center;}
+.pstat-logo img{height:22px;width:auto;max-width:120px;object-fit:contain;filter:brightness(0) invert(1);opacity:.7;}
+/* responsive tweaks */
+@media(max-width:600px){
+  .hero{padding:60px 0 48px;}
+  .hcta-box{padding:28px 24px;flex-direction:column;align-items:flex-start;}
+  .scta{flex-direction:column;align-items:flex-start;}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+/* ═══════════════════ B2C SECTION EXPANDED ═══════════════════ */
+
+.b2c-hero{
+  background:
+    linear-gradient(180deg,rgba(11,11,11,.72) 0%,rgba(11,11,11,.52) 50%,rgba(11,11,11,.82) 100%),
+    linear-gradient(180deg,rgba(165,62,255,.1) 0%,transparent 70%),
+    url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=1920&q=80') center/cover no-repeat;
+  border-bottom:1px solid var(--line2);
+  padding:64px 0 52px;
+}
+.b2c-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.b2c-eyebrow::before{content:'';width:18px;height:1px;background:var(--purple);}
+.b2c-hero-h{
+  font-size:clamp(34px,5.5vw,64px);font-weight:700;
+  line-height:1.03;letter-spacing:-.035em;
+  color:var(--ink);margin-bottom:14px;text-wrap:balance;
+}
+.b2c-hero-sub{
+  font-size:15px;font-weight:300;color:var(--ink2);
+  max-width:54ch;line-height:1.8;margin-bottom:36px;
+}
+.b2c-stats-bar{
+  display:flex;gap:0;flex-wrap:wrap;margin-bottom:36px;
+  border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);padding:22px 0;
+}
+.b2c-stat{flex:1;min-width:130px;padding:0 20px;border-right:1px solid var(--line2);}
+.b2c-stat:first-child{padding-left:0;}
+.b2c-stat:last-child{border-right:none;}
+.b2c-stat-n{
+  font-size:clamp(24px,3.2vw,40px);font-weight:700;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-.04em;line-height:1;margin-bottom:6px;font-variant-numeric:tabular-nums;
+}
+.b2c-stat-l{font-size:9.5px;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;line-height:1.35;}
+.b2c-hero-ctas{display:flex;gap:10px;flex-wrap:wrap;}
+/* B2B hero */
+.b2b-hero{
+  border-bottom:1px solid var(--line2);
+  padding:72px 0 56px;
+  position:relative;overflow:hidden;
+}
+.b2b-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 100% at 0% 0%,rgba(165,62,255,.1),transparent 70%);
+  pointer-events:none;
+}
+.b2b-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:24px;
+  display:flex;align-items:center;gap:10px;position:relative;
+}
+.b2b-eyebrow::before{content:'';width:18px;height:1px;background:var(--purple);}
+.b2b-hero-h{
+  font-size:clamp(36px,5.8vw,68px);font-weight:700;
+  line-height:1.02;letter-spacing:-.04em;
+  margin-bottom:16px;position:relative;text-wrap:balance;
+}
+.b2b-hero-sub{
+  font-size:clamp(15px,1.5vw,17px);font-weight:300;color:var(--ink2);
+  max-width:48ch;line-height:1.75;margin-bottom:40px;position:relative;
+}
+.b2b-proof-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);
+  padding:20px 0;margin-bottom:40px;position:relative;
+}
+@media(max-width:600px){.b2b-proof-strip{grid-template-columns:1fr;gap:16px;}}
+.b2b-proof{padding:0 24px;border-right:1px solid var(--line2);}
+.b2b-proof:first-child{padding-left:0;}
+.b2b-proof:last-child{border-right:none;}
+@media(max-width:600px){.b2b-proof{padding:0;border-right:none;border-bottom:1px solid var(--line);padding-bottom:16px;}
+.b2b-proof:last-child{border-bottom:none;padding-bottom:0;}}
+.b2b-proof-name{
+  font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink3);margin-bottom:5px;
+}
+.b2b-proof-line{font-size:13px;font-weight:400;color:var(--ink2);line-height:1.5;}
+.b2b-proof-line strong{color:var(--ink);font-weight:600;}
+.b2b-hero-ctas{display:flex;gap:10px;flex-wrap:wrap;position:relative;}
+
+.b2b-problems{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--line2);margin:48px 0 0;
+}
+@media(max-width:640px){.b2b-problems{grid-template-columns:1fr;}}
+.b2b-problem{background:var(--bg2);padding:28px 24px;}
+.b2b-problem-h{
+  font-size:15px;font-weight:600;color:var(--ink);
+  letter-spacing:-.01em;margin-bottom:10px;line-height:1.35;
+}
+.b2b-problem-p{font-size:13px;font-weight:300;color:var(--ink2);line-height:1.7;}
+.b2b-bridge-h{
+  font-size:clamp(20px,2.5vw,28px);font-weight:600;
+  letter-spacing:-.02em;color:var(--ink);
+  margin:56px 0 6px;text-wrap:balance;line-height:1.2;
+}
+.b2b-bridge-sub{
+  font-size:14px;font-weight:300;color:var(--ink2);
+  margin-bottom:32px;max-width:52ch;line-height:1.7;
+}
+
+/* competitive frame */
+.b2c-frame{
+  border:1px solid var(--line2);border-radius:var(--r-lg);
+  overflow:hidden;margin:48px 0;
+}
+.b2c-frame-header{
+  background:var(--bg2);border-bottom:1px solid var(--line2);
+  padding:11px 24px;
+  font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);
+}
+.b2c-frame-cols{display:grid;grid-template-columns:1fr 1fr;}
+@media(max-width:600px){.b2c-frame-cols{grid-template-columns:1fr;}}
+.b2c-frame-col{background:var(--bg2);padding:24px 28px;border-right:1px solid var(--line2);}
+.b2c-frame-col:last-child{border-right:none;}
+@media(max-width:600px){.b2c-frame-col{border-right:none;border-bottom:1px solid var(--line2);}
+.b2c-frame-col:last-child{border-bottom:none;}}
+.b2c-frame-lbl{
+  font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:10px;
+}
+.lbl-stuck{color:#c47050;}
+.lbl-open{color:#3bb87c;}
+.b2c-frame-h{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.01em;margin-bottom:8px;}
+.b2c-frame-body{font-size:13px;font-weight:300;color:var(--ink2);line-height:1.75;}
+
+/* channel saturation map */
+.b2c-ch-map{margin:0 0 48px;}
+.b2c-ch-map-hd{
+  font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink3);padding:0 0 10px;border-bottom:1px solid var(--line2);margin-bottom:0;
+}
+.b2c-ch-row{
+  display:flex;align-items:center;gap:0;
+  padding:11px 0;border-bottom:1px solid var(--line);
+}
+.b2c-ch-name{flex:0 0 auto;width:52%;font-size:13px;font-weight:300;color:var(--ink2);padding-right:8px;}
+.b2c-ch-name strong{color:var(--ink);font-weight:500;}
+.b2c-ch-bar-track{flex:1;height:3px;background:var(--line2);border-radius:2px;overflow:hidden;margin-right:14px;}
+.b2c-ch-fill{height:100%;border-radius:2px;}
+.fill-sat{background:#c06040;}
+.fill-con{background:#b07b30;}
+.fill-open-c{background:#3bb87c;}
+.fill-un{background:rgba(165,62,255,.6);}
+@media(max-width:560px){.b2c-ch-bar-track{display:none;}.b2c-ch-name{width:auto;flex:1;padding-right:8px;}}
+.b2c-ch-tag{
+  font-size:9.5px;font-weight:600;letter-spacing:.07em;
+  padding:3px 10px;border-radius:20px;white-space:nowrap;
+}
+.tag-saturated{color:#c06040;background:rgba(192,96,64,.12);}
+.tag-contested{color:#b89040;background:rgba(184,144,64,.12);}
+.tag-open{color:#3bb87c;background:rgba(59,184,124,.12);}
+.tag-unclaimed{
+  color:var(--violet);
+  border:1px solid rgba(165,62,255,.3);
+  background:rgba(165,62,255,.08);
+}
+
+/* expanded channel sections */
+.ch-sections{margin:0 0 0;}
+.ch-section{position:relative;overflow:hidden;padding:40px 0;border-bottom:1px solid var(--line2);}
+.ch-section:first-child{border-top:1px solid var(--line2);}
+.ch-sec-num-bg{
+  position:absolute;right:-4px;top:-16px;
+  font-size:clamp(80px,12vw,136px);font-weight:800;
+  color:var(--ink4);letter-spacing:-.06em;line-height:1;
+  pointer-events:none;user-select:none;font-family:var(--sans);
+}
+.ch-sec-top{position:relative;z-index:1;margin-bottom:24px;}
+.ch-sec-badge{
+  font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--purple);background:rgba(165,62,255,.12);
+  padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;
+}
+.ch-sec-name{
+  font-size:clamp(20px,3vw,28px);font-weight:700;
+  color:var(--ink);letter-spacing:-.025em;line-height:1.15;margin-bottom:6px;
+}
+.ch-sec-tagline{font-size:14px;font-weight:300;color:var(--ink2);line-height:1.6;max-width:56ch;}
+.ch-sec-body{position:relative;z-index:1;display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start;}
+@media(max-width:820px){.ch-sec-body{grid-template-columns:1fr;}}
+.ch-sec-desc{font-size:14px;font-weight:300;color:var(--ink2);line-height:1.8;}
+.ch-sec-desc p+p{margin-top:12px;}
+.ch-sec-desc strong{color:var(--ink);font-weight:500;}
+
+/* tactics list */
+.ch-tactics{
+  background:var(--bg2);border:1px solid var(--line2);
+  border-radius:var(--r-lg);overflow:hidden;
+}
+.ch-tactic{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:12px 16px;border-bottom:1px solid var(--line);
+}
+.ch-tactic:last-child{border-bottom:none;}
+.ch-tac-dot{
+  width:4px;height:4px;border-radius:50%;
+  background:var(--purple);flex-shrink:0;margin-top:8px;
+}
+.ch-tac-name{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.ch-tac-desc{font-size:12px;font-weight:300;color:var(--ink2);line-height:1.55;}
+
+/* proof callout */
+.ch-proof{
+  background:rgba(165,62,255,.06);border:1px solid rgba(165,62,255,.18);
+  border-radius:var(--r-lg);padding:18px 20px;margin-top:14px;
+}
+.ch-proof-lbl{
+  font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:6px;
+}
+.ch-proof-n{
+  font-size:clamp(28px,4vw,42px);font-weight:700;
+  letter-spacing:-.03em;line-height:1;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:5px;font-variant-numeric:tabular-nums;
+}
+.ch-proof-desc{font-size:12px;font-weight:300;color:var(--ink2);line-height:1.55;}
+
+/* Web2 UA elevated block */
+.b2c-w2-block{
+  background:var(--bg2);border:1px solid var(--line2);
+  border-radius:var(--r-lg);overflow:hidden;margin:48px 0;
+}
+.b2c-w2-head{
+  background:linear-gradient(100deg,rgba(165,62,255,.1),rgba(165,62,255,.02));
+  border-bottom:1px solid var(--line2);padding:28px 32px 24px;
+}
+.b2c-w2-badge{
+  font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--violet);display:inline-block;margin-bottom:8px;
+  border:1px solid rgba(165,62,255,.3);padding:3px 10px;border-radius:20px;
+  background:rgba(165,62,255,.08);
+}
+.b2c-w2-h{
+  font-size:clamp(18px,2.5vw,26px);font-weight:700;
+  color:var(--ink);letter-spacing:-.025em;margin-bottom:8px;
+}
+.b2c-w2-sub{font-size:14px;font-weight:300;color:var(--ink2);line-height:1.75;max-width:60ch;}
+.b2c-w2-sub strong{color:var(--ink);font-weight:500;}
+.b2c-w2-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-top:1px solid var(--line2);
+}
+@media(max-width:700px){.b2c-w2-grid{grid-template-columns:1fr;}}
+.b2c-w2-ch{padding:22px 24px;border-right:1px solid var(--line2);}
+.b2c-w2-ch:last-child{border-right:none;}
+@media(max-width:700px){
+  .b2c-w2-ch{border-right:none;border-bottom:1px solid var(--line2);}
+  .b2c-w2-ch:last-child{border-bottom:none;}
+}
+.b2c-w2-ch.row2-start,.b2c-w2-ch.row2-start~.b2c-w2-ch{border-top:1px solid var(--line2);}
+@media(max-width:700px){.b2c-w2-ch.row2-start,.b2c-w2-ch.row2-start~.b2c-w2-ch{border-top:none;}}
+.b2c-w2-ch-label{
+  font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:6px;
+}
+.b2c-w2-ch-name{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-.01em;margin-bottom:6px;}
+.b2c-w2-ch-desc{font-size:12.5px;font-weight:300;color:var(--ink2);line-height:1.6;}
+.b2c-w2-insight{
+  border-top:1px solid var(--line2);padding:18px 32px;
+  font-size:13px;font-weight:300;color:var(--ink2);line-height:1.65;
+}
+.b2c-w2-insight strong{color:var(--ink);font-weight:500;}
+
+/* RedotPay case study */
+.b2c-case{border:1px solid var(--line2);border-radius:var(--r-lg);overflow:hidden;margin:0 0 48px;}
+.b2c-case-hdr{
+  background:linear-gradient(135deg,rgba(165,62,255,.1) 0%,rgba(11,11,11,0) 55%),var(--bg2);
+  border-bottom:1px solid var(--line2);padding:32px 36px;
+  display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px;
+}
+.b2c-case-lbl{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;}
+.b2c-case-logo-img{height:24px;width:auto;filter:brightness(0) invert(1);opacity:.85;display:block;margin-bottom:14px;}
+.b2c-case-headline{font-size:clamp(16px,2vw,20px);font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1.3;}
+.b2c-case-pills{display:flex;gap:6px;flex-wrap:wrap;align-self:flex-end;}
+.b2c-case-pill{font-size:10px;font-weight:500;color:var(--ink3);border:1px solid var(--line2);border-radius:20px;padding:4px 10px;}
+.b2c-case-mstrip{display:flex;border-bottom:1px solid var(--line2);}
+.b2c-case-msstat{flex:1;padding:22px 28px;border-right:1px solid var(--line2);}
+.b2c-case-msstat:last-child{border-right:none;}
+.b2c-case-mn{
+  font-size:clamp(26px,3.5vw,42px);font-weight:700;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-.04em;line-height:1;margin-bottom:6px;font-variant-numeric:tabular-nums;
+}
+.b2c-case-ml{font-size:10px;font-weight:400;color:var(--ink3);letter-spacing:.07em;text-transform:uppercase;line-height:1.4;}
+.b2c-case-story-v2{padding:32px 36px;position:relative;}
+.b2c-case-story-v2::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--grad);}
+.b2c-case-story-v2 p{font-size:14px;font-weight:300;color:var(--ink2);line-height:1.8;}
+.b2c-case-story-v2 p+p{margin-top:12px;}
+.b2c-case-story-v2 strong{color:var(--ink);font-weight:500;}
+@media(max-width:600px){
+  .b2c-case-mstrip{flex-direction:column;}
+  .b2c-case-msstat{border-right:none;border-bottom:1px solid var(--line2);}
+  .b2c-case-msstat:last-child{border-bottom:none;}
+  .b2c-case-hdr,.b2c-case-story-v2{padding:24px;}
+}
+
+/* why now */
+.b2c-why-now{border:1px solid var(--line2);border-radius:var(--r-lg);overflow:hidden;margin:0 0 52px;}
+.b2c-wn-head{
+  background:var(--bg2);border-bottom:1px solid var(--line2);padding:20px 28px;
+}
+.b2c-wn-lbl{
+  font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:6px;
+}
+.b2c-wn-h{font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-.02em;}
+.b2c-wn-rows{display:grid;grid-template-columns:repeat(3,1fr);}
+@media(max-width:680px){.b2c-wn-rows{grid-template-columns:1fr;}}
+.b2c-wn-row{background:var(--bg2);padding:22px 24px;border-right:1px solid var(--line2);}
+.b2c-wn-row:last-child{border-right:none;}
+@media(max-width:680px){
+  .b2c-wn-row{border-right:none;border-bottom:1px solid var(--line2);}
+  .b2c-wn-row:last-child{border-bottom:none;}
+}
+.b2c-wn-row-h{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-.01em;margin-bottom:6px;}
+.b2c-wn-row-body{font-size:12.5px;font-weight:300;color:var(--ink2);line-height:1.65;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav class="nav">
+  <div class="nav-logo">
+    <img src="https://calendar.app.google/jF7b8wFvyEPSVvEAA/__l5e/assets-v1/fe6e1a46-ef4d-4f83-99db-91ae765b52ce/onstack-logo.png" alt="MPM Labs">
+  </div>
+  <div class="nav-icps">
+    <button class="ntab on" data-s="home">Overview</button>
+    <button class="ntab" data-s="b2c">B2C Cryptobanks</button>
+    <button class="ntab" data-s="b2b">B2B Cryptobanks</button>
+    <button class="ntab" data-s="web2">“Web2” Neobanks</button>
+  </div>
+  <div class="nav-divider"></div>
+  <button class="nav-gtm" data-s="gtm">Go-To-Market Playbook ↗</button>
+</nav>
+
+<main>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<section class="sec on" id="home">
+
+  <div class="hero">
+    <div class="w">
+      <h1 class="hero-h">We grow<br><span class="g">neobanks.</span></h1>
+      <p class="hero-sub">Distribution strategy, partnerships, and market access for the teams building the next chapter of global finance.</p>
+      <div class="hero-ctas">
+        <a href="https://calendar.app.google/jF7b8wFvyEPSVvEAA" target="_blank" rel="noopener" class="btn btn-p">Book a call &rarr;</a>
+        <button class="btn btn-o" onclick="show('gtm')">See the playbook</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="icps">
+    <div class="w">
+      <div class="icps-h">Which one are you?</div>
+      <div class="icps-row">
+
+        <div class="icard" data-s="b2c" tabindex="0" role="button">
+          <div class="icard-num">01</div>
+          <div class="icard-tag">B2C Cryptobanks</div>
+          <div class="icard-title">Crypto card or stablecoin spending app</div>
+          <div class="icard-desc">Think Kast, RedotPay, EtherFi. Product works, users are real . The Web3-native ceiling is closer than it looks.</div>
+          <div class="icard-cta">See how we&rsquo;d grow you &rarr;</div>
+        </div>
+
+        <div class="icard" data-s="b2b" tabindex="0" role="button">
+          <div class="icard-num">02</div>
+          <div class="icard-tag">B2B Cryptobanks</div>
+          <div class="icard-title">Business banking for global operators</div>
+          <div class="icard-desc">Your users are the entrepreneurs, agencies, and contractors getting killed by wire fees and slow settlement. The banking rails exist. The distribution doesn’t.</div>
+          <div class="icard-cta">See how we&rsquo;d grow you &rarr;</div>
+        </div>
+
+        <div class="icard" data-s="web2" tabindex="0" role="button">
+          <div class="icard-num">03</div>
+          <div class="icard-tag">“Web2” Neobanks</div>
+          <div class="icard-title">Digital bank exploring on-chain rails</div>
+          <div class="icard-desc">Think Mercury, Wise, Revolut. Watching $759M/month in crypto card spend from the sidelines and wondering when to move.</div>
+          <div class="icard-cta">See what&rsquo;s on the table &rarr;</div>
+        </div>
+
+      </div>
+
+      <!-- GTM strip -->
+      <div class="gtm-strip" onclick="show('gtm')" role="button" tabindex="0">
+        <div class="gtm-strip-left">
+          <div class="gtm-strip-icon">&rarr;</div>
+          <div>
+            <div class="gtm-strip-lbl">Methodology</div>
+            <div class="gtm-strip-title">The Go-To-Market Playbook</div>
+            <div class="gtm-strip-desc">Every channel we run, for all three profiles: partnerships, LinkedIn, podcasts, paid, and more.</div>
+          </div>
+        </div>
+        <div class="gtm-strip-action">View playbook &rarr;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- proof -->
+  <div class="proof">
+    <div class="w">
+      <div class="proof-row">
+        <div class="pstat">
+          <div class="pstat-logo"><img src="data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iY29sb3I6YmxhY2siIHdpZHRoPSIxNDYzIiBoZWlnaHQ9IjQ4MCIgdmlld0JveD0iMCAwIDE0NjMgNDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTI1Ny4wMTkgNDgwLjU5MUgyNDBDMTA3LjQ1MiA0ODAuNTkxIDAgMzczLjE0IDAgMjQwLjU5MUMwIDEwOC4wNDMgMTA3LjQ1MiAwLjU5MTQzMSAyNDAgMC41OTE0MzFDMzcyLjU0OCAwLjU5MTQzMSA0ODAgMTA4LjA0MyA0ODAgMjQwLjU5MUM0ODAgMjUyLjQ2IDQ3OS4xMzcgMjY0LjEzNCA0NzcuNDY5IDI3NS41NTRINDQzLjg3NUM0NDUuODA3IDI2NC4xOTggNDQ2LjgxNSAyNTIuNTE4IDQ0Ni44MTUgMjQwLjU5MUM0NDYuODE1IDEyNi4zNzEgMzU0LjIyMSAzMy43NzY2IDI0MCAzMy43NzY2QzEyNS43NzkgMzMuNzc2NiAzMy4xODUyIDEyNi4zNzEgMzMuMTg1MiAyNDAuNTkxQzMzLjE4NTIgMzU0LjgxMiAxMjUuNzc5IDQ0Ny40MDYgMjQwIDQ0Ny40MDZIMzYzLjAwNUMzMzEuNTk0IDQ2Ni4xMjkgMjk1LjU1NyA0NzcuODk4IDI1Ny4wMTkgNDgwLjU5MVpNNDA4Ljk4MyA0MTEuODUxSDI0MEMxNDUuNDE2IDQxMS44NTEgNjguNzQwNyAzMzUuMTc1IDY4Ljc0MDcgMjQwLjU5MUM2OC43NDA3IDE0Ni4wMDggMTQ1LjQxNiA2OS4zMzIyIDI0MCA2OS4zMzIyQzMzNC41ODQgNjkuMzMyMiA0MTEuMjU5IDE0Ni4wMDggNDExLjI1OSAyNDAuNTkxQzQxMS4yNTkgMjUyLjU2MyA0MTAuMDI4IDI2NC4yNTkgNDA3LjY4NCAyNzUuNTU0SDM3My42MTNDMzc2LjUyMyAyNjQuNCAzNzguMDc0IDI1Mi42ODYgMzc4LjA3NCAyNDAuNTkxQzM3OC4wNzQgMTY0LjMzNSAzMTYuMjU2IDEwMi41MTcgMjQwIDEwMi41MTdDMTYzLjc0NCAxMDIuNTE3IDEwMS45MjYgMTY0LjMzNSAxMDEuOTI2IDI0MC41OTFDMTAxLjkyNiAzMTYuODQ4IDE2My43NDQgMzc4LjY2NSAyNDAgMzc4LjY2NUg0MzcuMDU0QzQyOC43MDIgMzkwLjU2MyA0MTkuMyA0MDEuNjcgNDA4Ljk4MyA0MTEuODUxWk0yNDAgMzQzLjExSDQ1Ny43MkM0NjIuNzQ3IDMzMi40NTQgNDY3LjAxNCAzMjEuMzY5IDQ3MC40NTIgMzA5LjkyNUgyNDBDMjAxLjcwOCAzMDkuOTI1IDE3MC42NjcgMjc4Ljg4MyAxNzAuNjY3IDI0MC41OTFDMTcwLjY2NyAyMDIuMyAyMDEuNzA4IDE3MS4yNTggMjQwIDE3MS4yNThDMjc4LjI5MiAxNzEuMjU4IDMwOS4zMzMgMjAyLjMgMzA5LjMzMyAyNDAuNTkxQzMwOS4zMzMgMjUzLjM2MyAzMDUuODk0IDI2NS4yOTYgMjk5Ljg4OSAyNzUuNTU0SDMzNi4zOTdDMzQwLjM1OCAyNjQuNjM3IDM0Mi41MTggMjUyLjg1OSAzNDIuNTE4IDI0MC41OTFDMzQyLjUxOCAxODMuOTcyIDI5Ni42MTkgMTM4LjA3MyAyNDAgMTM4LjA3M0MxODMuMzgxIDEzOC4wNzMgMTM3LjQ4MSAxODMuOTcyIDEzNy40ODEgMjQwLjU5MUMxMzcuNDgxIDI5Ny4yMTEgMTgzLjM4MSAzNDMuMTEgMjQwIDM0My4xMVpNNjk2LjM0IDM3OC42QzYxNy4zNzcgMzc4LjYgNTY5LjQwOSAzMjIuMTQ2IDU2OS40MDkgMjQwLjZDNTY5LjQwOSAxNTYuNDcyIDYxOS45NiAxMDIuNiA2OTYuMzQgMTAyLjZDNzc0LjkzNCAxMDIuNiA4MjMuNjM5IDE1OC4zMTcgODIzLjYzOSAyNDAuMjMxQzgyMy42MzkgMzI1LjA5OCA3NzIuNzIgMzc4LjYgNjk2LjM0IDM3OC42Wk02OTYuMzQgMTM5LjEzQzY0NC42ODIgMTM5LjEzIDYxMi41ODEgMTc5LjM0OSA2MTIuNTgxIDI0MC4yMzFDNjEyLjU4MSAzMDIuNTkgNjQ1LjQyIDM0MS4zMzMgNjk2LjM0IDM0MS4zMzNDNzQ4LjczNiAzNDEuMzMzIDc4MC40NjggMzAxLjExNCA3ODAuNDY4IDI0MC42Qzc4MC40NjggMTc4LjYxMSA3NDcuMjYgMTM5LjEzIDY5Ni4zNCAxMzkuMTNaTTg5Mi44MDEgMzc0LjkxMUg4NTQuMDU3VjE4MC44MjVIODg4LjAwNEw4OTMuMTcgMjE2Ljk4NUg4OTUuNzUzQzkwNy45MjkgMTkxLjUyNiA5MzEuNTQ0IDE3Ny4xMzUgOTYwLjY5NCAxNzcuMTM1QzEwMDQuMjMgMTc3LjEzNSAxMDI3Ljg1IDIwOC40OTkgMTAyNy44NSAyNTYuNDY3VjM3NC45MTFIOTg4LjczN1YyNjAuNTI2Qzk4OC43MzcgMjI2LjU3OSA5NzMuMjM5IDIxMC43MTMgOTQ1LjkzNSAyMTAuNzEzQzkxMy44MzMgMjEwLjcxMyA4OTIuODAxIDIzNi4xNzMgODkyLjgwMSAyNzMuMDcxVjM3NC45MTFaTTEyNDQuMDkgMzc0LjkxMVYxMDMuMzM4SDEyMDQuOThWMjE4LjQ2MUgxMjAyLjc2QzExOTIuOCAxOTQuNDc3IDExNjkuOTMgMTc3LjEzNSAxMTM2LjcyIDE3Ny4xMzVDMTA4Ny42NCAxNzcuMTM1IDEwNTQuNDMgMjE2LjI0NyAxMDU0LjQzIDI3OS4zNDRDMTA1NC40MyAzNDAuMjI2IDEwODYuNTMgMzc4LjYgMTEzNi4zNSAzNzguNkMxMTY2LjYgMzc4LjYgMTE5Mi40MyAzNjQuMjEgMTIwMi43NiAzNDAuNTk1SDEyMDQuOThMMTIwOS40MSAzNzQuOTExSDEyNDQuMDlaTTEyMDQuOTggMjg5LjMwNkMxMjA0Ljk4IDMyMS40MDggMTE4Mi4xIDM0NS4zOTIgMTE0OC4xNiAzNDUuMzkyQzExMTUuNjggMzQ1LjM5MiAxMDk0LjI4IDMyMi44ODQgMTA5NC4yOCAyNzkuMzQ0QzEwOTQuMjggMjM3LjY0OSAxMTEzLjQ3IDIxMC43MTMgMTE0OC44OSAyMTAuNzEzQzExODAuOTkgMjEwLjcxMyAxMjA0Ljk4IDIzMi40ODMgMTIwNC45OCAyNjcuOTA1VjI4OS4zMDZaTTEzNjcuOTkgMzc4LjZDMTMxMS4xNyAzNzguNiAxMjczLjUzIDMzNy42NDMgMTI3My41MyAyNzguMjM3QzEyNzMuNTMgMjE4LjQ2MSAxMzExLjE3IDE3Ny4xMzUgMTM2Ny45OSAxNzcuMTM1QzE0MjQuODIgMTc3LjEzNSAxNDYyLjA4IDIxOC40NjEgMTQ2Mi4wOCAyNzguMjM3QzE0NjIuMDggMzM3LjY0MyAxNDI0LjgyIDM3OC42IDEzNjcuOTkgMzc4LjZaTTEzNjcuOTkgMjEwLjcxM0MxMzM0LjQxIDIxMC43MTMgMTMxMy4zOCAyMzYuNTQyIDEzMTMuMzggMjc3Ljg2OEMxMzEzLjM4IDMxOC40NTYgMTMzMy4zMSAzNDQuNjU0IDEzNjcuOTkgMzQ0LjY1NEMxNDAxLjIgMzQ0LjY1NCAxNDIyLjIzIDMxOS41NjMgMTQyMi4yMyAyNzcuNDk5QzE0MjIuMjMgMjM3LjY0OSAxNDAyLjY4IDIxMC43MTMgMTM2Ny45OSAyMTAuNzEzWiIgZmlsbD0iY3VycmVudENvbG9yIi8+Cjwvc3ZnPgo=" alt="Ondo Finance"></div>
+          <div class="pstat-n g">$5B+</div>
+          <div class="pstat-desc">Monthly volume on Ondo Perps, the platform we led distribution for. Trade acquisition through affiliate programs, alpha communities, and trading competitions.</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-logo"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTY1IiBoZWlnaHQ9IjMxIiB2aWV3Qm94PSIwIDAgMTY1IDMxIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTQuOTk0NiAxMi4wNjQ1QzEzLjEwMTUgMTIuMDY0NSAxMS41NjY0IDEzLjU5OTYgMTEuNTY2NCAxNS40OTI3VjE4LjkyMDlIMTQuOTk0NkMxNi44ODc4IDE4LjkyMDkgMTguNDIyOSAxNy4zODU4IDE4LjQyMjkgMTUuNDkyN0MxOC40MjI5IDEzLjU5OTYgMTYuODg3OCAxMi4wNjQ1IDE0Ljk5NDYgMTIuMDY0NVoiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTE0Ljk5MyAwLjVDNi43MTQyNiAwLjUgMCA3LjIxNDI2IDAgMTUuNDkzVjMwLjQ4NjFINi44NTY0N1YxNS40OTNDNi44NTY0NyAxMS4wMDA1IDEwLjUwMDUgNy4zNTY0OSAxNC45OTMgNy4zNTY0OUMxOS40ODU2IDcuMzU2NDkgMjMuMTI5NiAxMS4wMDA1IDIzLjEyOTYgMTUuNDkzQzIzLjEyOTYgMTkuOTg1NiAxOS40ODU2IDIzLjYyOTYgMTQuOTkzIDIzLjYyOTZIMTEuNTY0OFYzMC40ODYxSDE0Ljk5M0MyMy4yNzE4IDMwLjQ4NjEgMjkuOTg2MSAyMy43NzE4IDI5Ljk4NjEgMTUuNDkzQzI5Ljk4NjEgNy4yMTQyNiAyMy4yNzE4IDAuNSAxNC45OTMgMC41WiIgZmlsbD0iI0VCMDAyOCIvPgo8cGF0aCBkPSJNMzYuODQwOCA1LjA5OTYxVjI1Ljg5OTZINDAuMTk1NVYxOC4yMjRMNDcuMDAyOSAyNS44OTk2SDUxLjQ3NThMNDUuMTM0MyAxOC44MzcxQzQ4LjIzODkgMTguMTQwNyA1MC41NjM2IDE1LjM2NDcgNTAuNTYzNiAxMi4wNTQyQzUwLjU2MzYgOC4yMTg4NiA0Ny40NDQ0IDUuMDk5NjEgNDMuNjA5IDUuMDk5NjFIMzYuODM1OUgzNi44NDA4Wk00My42MTQgOC42MzU3NUM0NS40OTI0IDguNjM1NzUgNDcuMDE3NyAxMC4xNzU4IDQ3LjAxNzcgMTIuMDU0MkM0Ny4wMTc3IDEzLjkzMjYgNDUuNDkyNCAxNS40NTc5IDQzLjYxNCAxNS40NTc5SDQzLjU2OThINDAuMjAwNFY4LjYzNTc1SDQzLjYxODlINDMuNjE0WiIgZmlsbD0iI0VCMDAyOCIvPgo8cGF0aCBkPSJNMTEzLjg5OSA1LjA5OTY0VjI1Ljg5OTZIMTE3LjI1NFYxOC45ODkySDEyMC4yNDFDMTIwLjM4OCAxOC45ODkyIDEyMC41NCAxOC45ODkyIDEyMC42NjggMTguOTg5MkMxMjQuNTAzIDE4Ljk4OTIgMTI3LjYyMiAxNS44ODQ2IDEyNy42MjIgMTIuMDQ5M0MxMjcuNjIyIDguMjE0IDEyNC41MDMgNS4wOTQ3MyAxMjAuNjY4IDUuMDk0NzNIMTEzLjg5NUwxMTMuODk5IDUuMDk5NjRaTTEyMC42NzMgOC42MzU3N0MxMjIuNTUxIDguNjM1NzcgMTI0LjA3NiAxMC4xNzU4IDEyNC4wNzYgMTIuMDU0MkMxMjQuMDc2IDEzLjkzMjYgMTIyLjU1MSAxNS40NTc5IDEyMC42NzMgMTUuNDU3OUgxMjAuNjI4SDExNy4yNjlWOC42MzU3N0gxMjAuNjczWiIgZmlsbD0iI0VCMDAyOCIvPgo8cGF0aCBkPSJNODAuNDMxNSAxMS44OTI0Qzc5LjE4MDggMTEuMDE0NSA3Ny42NjA0IDEwLjQ5OTUgNzYuMDE3NCAxMC40OTk1QzcxLjc3MDEgMTAuNDk5NSA2OC4zMTI1IDEzLjk1NzIgNjguMzEyNSAxOC4yMDQ0QzY4LjMxMjUgMjIuNDUxNyA3MS43NzAxIDI1LjkwOTQgNzYuMDE3NCAyNS45MDk0Qzc3LjY2MDQgMjUuOTA5NCA3OS4xODA4IDI1LjM5NDQgODAuNDMxNSAyNC41MTY1VjI1LjkwOTRIODMuNzkxMVY1LjA5NDczSDgwLjQzMTVWMTEuODk3M1YxMS44OTI0Wk03Ni4wMTc0IDIyLjMxNDRDNzMuNzQ2NyAyMi4zMTQ0IDcxLjg5NzcgMjAuNDY1NCA3MS44OTc3IDE4LjE5OTVDNzEuODk3NyAxNS45MzM3IDczLjc0NjcgMTQuMDc5OCA3Ni4wMTc0IDE0LjA3OThDNzguMjg4MiAxNC4wNzk4IDgwLjEzMjMgMTUuOTI4OCA4MC4xMzIzIDE4LjE5OTVDODAuMTMyMyAyMC40NzAzIDc4LjI4MzMgMjIuMzE0NCA3Ni4wMTc0IDIyLjMxNDRaIiBmaWxsPSIjRUIwMDI4Ii8+CjxwYXRoIGQ9Ik0xMDcuNzU1IDcuMjc3MzdIMTA0LjQwMVYxMS4zOTcxSDEwMS4yODFWMTQuMTczMUgxMDQuNDAxVjIxLjA3ODZDMTA0LjQwMSAyMi41MzA0IDEwNC44NDcgMjMuNjk3NiAxMDUuNzMgMjQuNTUxQzEwNi42NDcgMjUuNDM4NyAxMDcuNzExIDI1LjgzMTEgMTA5LjE3NyAyNS44MzExSDExMS4yNjJWMjIuNDc2NEgxMDkuODFDMTA5LjE1OCAyMi40NzY0IDEwOC42NTMgMjIuMjk0OSAxMDguMjk1IDIxLjkzNjlDMTA3Ljk0MiAyMS41Nzg5IDEwNy43NiAyMS4wODM1IDEwNy43NiAyMC40NjU2VjE0LjE2ODJIMTExLjI5NlYxMS4zOTIySDEwNy43NlY3LjI3MjQ2TDEwNy43NTUgNy4yNzczN1oiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTE0OC4wNDUgMzAuNUgxNTIuMDQ4TDE1My42OTEgMjYuNjEwOEwxNjAuODEyIDEwLjQ5OTVIMTU2Ljc1MUwxNTIuNjk1IDIwLjU0ODhMMTQ4Ljg1NSAxMC40OTk1SDE0NC44MjhMMTUwLjY0NSAyNC43ODE0TDE0OC4wNDUgMzAuNVoiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTE0MC4yNjYgMTEuOTk1NEMxMzguOTkxIDExLjA1ODYgMTM3LjQxNyAxMC40OTk1IDEzNS43MTUgMTAuNDk5NUMxMzEuNDcyIDEwLjQ5OTUgMTI4LjAyIDEzLjk1MjMgMTI4LjAyIDE4LjE5NDdDMTI4LjAyIDIyLjQzNzEgMTMxLjQ3MiAyNS44ODk4IDEzNS43MTUgMjUuODg5OEMxMzcuNDE3IDI1Ljg4OTggMTM4Ljk5MSAyNS4zMzU2IDE0MC4yNjYgMjQuMzkzOVYyNS44OTk2SDE0My41OTZWMTAuNTE0MkgxNDAuMjY2VjExLjk5MDVWMTEuOTk1NFpNMTM1LjcyIDIyLjMwOTVDMTMzLjQ1NCAyMi4zMDk1IDEzMS42MDUgMjAuNDY1NCAxMzEuNjA1IDE4LjE5NDdDMTMxLjYwNSAxNS45MjM5IDEzMy40NDkgMTQuMDc5OCAxMzUuNzIgMTQuMDc5OEMxMzcuOTkgMTQuMDc5OCAxMzkuODM0IDE1LjkyMzkgMTM5LjgzNCAxOC4xOTQ3QzEzOS44MzQgMjAuNDY1NCAxMzcuOTkgMjIuMzA5NSAxMzUuNzIgMjIuMzA5NVoiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTkzLjEwNjMgMTAuNTA0NEM4OC44NTkgMTAuNTA0NCA4NS40MDYyIDEzLjk1NzIgODUuNDA2MiAxOC4yMDQ1Qzg1LjQwNjIgMjIuNDUxOCA4OC44NTkgMjUuOTA0NSA5My4xMDYzIDI1LjkwNDVDOTcuMzUzNiAyNS45MDQ1IDEwMC44MDYgMjIuNDUxOCAxMDAuODA2IDE4LjIwNDVDMTAwLjgwNiAxMy45NTcyIDk3LjM1MzYgMTAuNTA0NCA5My4xMDYzIDEwLjUwNDRaTTkzLjEwNjMgMjIuMzE0NEM5MC44MzU1IDIyLjMxNDQgODguOTkxNCAyMC40NjU0IDg4Ljk5MTQgMTguMTk5NUM4OC45OTE0IDE1LjkzMzcgOTAuODQwNCAxNC4wODQ3IDkzLjEwNjMgMTQuMDg0N0M5NS4zNzIyIDE0LjA4NDcgOTcuMjI2MSAxNS45MzM3IDk3LjIyNjEgMTguMTk5NUM5Ny4yMjYxIDIwLjQ2NTQgOTUuMzc3MSAyMi4zMTQ0IDkzLjEwNjMgMjIuMzE0NFoiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTU5LjAwMDkgMTAuNDk5NkM1NC43NTM2IDEwLjQ5OTYgNTEuMzAwOCAxMy45NTIzIDUxLjMwMDggMTguMTk5NkM1MS4zMDA4IDIyLjQ0NjkgNTQuNzUzNiAyNS44OTk3IDU5LjAwMDkgMjUuODk5N0M2MS43Mjc4IDI1Ljg5OTcgNjQuMTggMjQuNDkyMSA2NS41NjMxIDIyLjIyMTNMNjIuMTEwMyAyMC44ODI0QzYxLjM1NSAyMS43NTU0IDYwLjI0MTcgMjIuMzA5NiA1OS4wMDA5IDIyLjMwOTZDNTcuMjUgMjIuMzA5NiA1NS43NDkyIDIxLjIwNjEgNTUuMTU1NyAxOS42NjEySDY2LjU1ODdMNjYuNTczNCAxOS41Nzc4QzY2LjY1NjggMTkuMTE2OCA2Ni43MDA5IDE4LjY1MDggNjYuNzAwOSAxOC4xODk4QzY2LjcwMDkgMTMuOTQyNSA2My4yNDgyIDEwLjQ4OTcgNTkuMDAwOSAxMC40ODk3VjEwLjQ5OTZaTTYyLjgxNjUgMTYuNzMzMkg1NS4xNTU3QzU1Ljc0OTIgMTUuMTgzNCA1Ny4yNSAxNC4wNzk4IDU5LjAwMDkgMTQuMDc5OEM2MC43NTE4IDE0LjA3OTggNjIuMjU3NCAxNS4xODM0IDYyLjg0NiAxNi43MzMySDYyLjgxMTZINjIuODE2NVoiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTE2Mi42NzggNS4wOTQ3M0MxNjMuMDMzIDUuMDk0NzMgMTYzLjM1MiA1LjE3NzQzIDE2My42MzQgNS4zNDI4NEMxNjMuOTE1IDUuNTAyMTIgMTY0LjEzNiA1LjcyNTczIDE2NC4yOTUgNi4wMTM2NkMxNjQuNDU1IDYuMjk1NDYgMTY0LjUzNCA2LjYxNDAyIDE2NC41MzQgNi45NjkzNEMxNjQuNTM0IDcuMzI0NjYgMTY0LjQ1NSA3LjY0NjI5IDE2NC4yOTUgNy45MzQyMkMxNjQuMTM2IDguMjIyMTUgMTYzLjkxNSA4LjQ0ODgyIDE2My42MzQgOC42MTQyM0MxNjMuMzUyIDguNzczNTEgMTYzLjAzMyA4Ljg1MzE1IDE2Mi42NzggOC44NTMxNUMxNjIuMzE2IDguODUzMTUgMTYxLjk5NSA4Ljc3MzUxIDE2MS43MTMgOC42MTQyM0MxNjEuNDMxIDguNDQ4ODIgMTYxLjIxMSA4LjIyMjE1IDE2MS4wNTEgNy45MzQyMkMxNjAuODkyIDcuNjQ2MjkgMTYwLjgxMiA3LjMyNDY2IDE2MC44MTIgNi45NjkzNEMxNjAuODEyIDYuNjE0MDIgMTYwLjg5MiA2LjI5NTQ2IDE2MS4wNTEgNi4wMTM2NkMxNjEuMjExIDUuNzI1NzMgMTYxLjQzMSA1LjUwMjEyIDE2MS43MTMgNS4zNDI4NEMxNjEuOTk1IDUuMTc3NDMgMTYyLjMxNiA1LjA5NDczIDE2Mi42NzggNS4wOTQ3M1pNMTYyLjY3OCA4LjQ4NTU4QzE2My4xMTkgOC40ODU1OCAxNjMuNDc0IDguMzQ0NjggMTYzLjc0NCA4LjA2Mjg3QzE2NC4wMiA3Ljc4MTA2IDE2NC4xNTcgNy40MTY1NiAxNjQuMTU3IDYuOTY5MzRDMTY0LjE1NyA2LjUyMjEzIDE2NC4wMiA2LjE1NzYyIDE2My43NDQgNS44NzU4MkMxNjMuNDc0IDUuNTk0MDEgMTYzLjExOSA1LjQ1MzExIDE2Mi42NzggNS40NTMxMUMxNjIuMjMxIDUuNDUzMTEgMTYxLjg3MiA1LjU5NDAxIDE2MS42MDMgNS44NzU4MkMxNjEuMzM5IDYuMTU3NjIgMTYxLjIwOCA2LjUyMjEzIDE2MS4yMDggNi45NjkzNEMxNjEuMjA4IDcuNDE2NTYgMTYxLjMzOSA3Ljc4MTA2IDE2MS42MDMgOC4wNjI4N0MxNjEuODcyIDguMzQ0NjggMTYyLjIzMSA4LjQ4NTU4IDE2Mi42NzggOC40ODU1OFpNMTYzLjUwNSA2LjU4MzM5QzE2My41MDUgNi43MzA0MiAxNjMuNDY1IDYuODU2MDEgMTYzLjM4NiA2Ljk2MDE1QzE2My4zMTIgNy4wNTgxNyAxNjMuMjA4IDcuMTI4NjIgMTYzLjA3MyA3LjE3MTUxTDE2My41ODggNy45MzQyMkwxNjMuMDA5IDcuOTQzNDFMMTYyLjU2OCA3LjIwODI3SDE2Mi40MTFWNy45NDM0MUgxNjEuOTM0VjUuOTY3NzFIMTYyLjgxNkMxNjMuMDI0IDUuOTY3NzEgMTYzLjE4OSA2LjAyMjg1IDE2My4zMTIgNi4xMzMxMkMxNjMuNDQxIDYuMjQzMzkgMTYzLjUwNSA2LjM5MzQ4IDE2My41MDUgNi41ODMzOVpNMTYyLjQxMSA2LjgxMzEzSDE2Mi43ODhDMTYyLjg1NiA2LjgxMzEzIDE2Mi45MTEgNi43OTQ3NSAxNjIuOTU0IDYuNzU3OTlDMTYzLjAwMyA2LjcyMTIzIDE2My4wMjcgNi42NjkxNiAxNjMuMDI3IDYuNjAxNzdDMTYzLjAyNyA2LjUzNDM4IDE2My4wMDMgNi40ODUzNyAxNjIuOTU0IDYuNDU0NzRDMTYyLjkxMSA2LjQxNzk5IDE2Mi44NTYgNi4zOTk2MSAxNjIuNzg4IDYuMzk5NjFIMTYyLjQxMVY2LjgxMzEzWiIgZmlsbD0iI0VCMDAyOCIvPgo8L3N2Zz4K" alt="RedotPay"></div>
+          <div class="pstat-n g">$107M</div>
+          <div class="pstat-desc">Series B-backed global crypto card platform. Distribution strategy and go-to-market execution across key markets.</div>
+        </div>
+        <div class="pstat">
+          <div class="pstat-logo"><img src="data:image/png;base64,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" alt="Bitget Canada"></div>
+          <div class="pstat-n g">10K+</div>
+          <div class="pstat-desc">ICP followers driven for Bitget Canada with a 3.8% click-through rate on crypto-native paid campaigns. Canadian market entry and user acquisition.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hcta">
+    <div class="w">
+      <div class="hcta-box">
+        <div>
+          <h2>Ready to build your distribution engine?</h2>
+          <p>We scope a concrete channel strategy in the first call.</p>
+        </div>
+        <a href="https://calendar.app.google/jF7b8wFvyEPSVvEAA" target="_blank" rel="noopener" class="btn btn-p">Book a call &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════════ B2C CRYPTOBANKS ═══════════════ -->
+<section class="sec" id="b2c">
+
+  <!-- HERO -->
+  <div class="b2c-hero">
+    <div class="w">
+      <div class="b2c-eyebrow">Crypto cards &amp; wallet products</div>
+      <h2 class="b2c-hero-h">The next 10&times; isn&rsquo;t<br>in your current audience.</h2>
+      <p class="b2c-hero-sub">Kast, RedotPay, and EtherFi built the $759M/month crypto card market. Now all of them are making the same move: shifting toward “Web2” UA and positioning as financial superapps. The Web3-native ceiling is visible, and every incumbent sees it.</p>
+      <div class="b2c-stats-bar">
+        <div class="b2c-stat"><div class="b2c-stat-n">$759M</div><div class="b2c-stat-l">Crypto card spend per month</div></div>
+          <div class="b2c-stat"><div class="b2c-stat-n">20K&ndash;100K</div><div class="b2c-stat-l">Web3-native users every card competes for</div></div>
+        <div class="b2c-stat"><div class="b2c-stat-n">617M</div><div class="b2c-stat-l">Crypto holders outside that pool</div></div>
+      </div>
+      <div class="b2c-hero-ctas">
+        <a href="https://calendar.app.google/jF7b8wFvyEPSVvEAA" target="_blank" rel="noopener" class="btn btn-p">Book a call &rarr;</a>
+        <button class="btn btn-o" onclick="document.getElementById('b2c-case').scrollIntoView({behavior:'smooth'})">See RedotPay case study</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="w">
+
+    <!-- COMPETITIVE FRAME -->
+    <div class="b2c-frame">
+      <div class="b2c-frame-header">The competitive landscape</div>
+      <div class="b2c-frame-cols">
+        <div class="b2c-frame-col">
+          <div class="b2c-frame-lbl lbl-stuck">Where your competitors are fighting</div>
+          <div class="b2c-frame-h">Saturated channels, recirculated audiences</div>
+          <div class="b2c-frame-body">KOL drops hitting the same wallets. Twitter Spaces. Discord raids. Trading competitions pulling from the same pool of DeFi-native users. Every crypto card company is running the same playbook against the same 20,000&ndash;100,000 people. CAC climbs every quarter to prove it.</div>
+        </div>
+        <div class="b2c-frame-col">
+          <div class="b2c-frame-lbl lbl-open">Where no one has shown up yet</div>
+          <div class="b2c-frame-h">Mainstream channels, unclaimed territory</div>
+          <div class="b2c-frame-body">LinkedIn finance audiences. Personal finance podcasts. PPC against intent signals from users already searching for crypto cards. Co-marketing with consumer brands your ICP trusts. Distribution partnerships outside the Web3 bubble. These channels are open and your competitors don&rsquo;t know how to operate in them.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHANNEL MAP -->
+    <div class="b2c-ch-map">
+      <div class="b2c-ch-map-hd">Channel saturation map: B2C crypto card market</div>
+      <div class="b2c-ch-row"><span class="b2c-ch-name">KOL &amp; alpha caller campaigns</span><div class="b2c-ch-bar-track"><div class="b2c-ch-fill fill-sat" style="width:100%"></div></div><span class="b2c-ch-tag tag-saturated">Saturated</span></div>
+      <div class="b2c-ch-row"><span class="b2c-ch-name">Twitter / X crypto communities</span><div class="b2c-ch-bar-track"><div class="b2c-ch-fill fill-sat" style="width:100%"></div></div><span class="b2c-ch-tag tag-saturated">Saturated</span></div>
+      <div class="b2c-ch-row"><span class="b2c-ch-name">Discord &amp; Telegram acquisition</span><div class="b2c-ch-bar-track"><div class="b2c-ch-fill fill-sat" style="width:100%"></div></div><span class="b2c-ch-tag tag-saturated">Saturated</span></div>
+      <div class="b2c-ch-row"><span class="b2c-ch-name">Web3 distribution partnerships &amp; co-marketing</span><div class="b2c-ch-bar-track"><div class="b2c-ch-fill fill-con" style="width:62%"></div></div><span class="b2c-ch-tag tag-contested">Contested</span></div>
+      <div class="b2c-ch-row"><span class="b2c-ch-name"><strong>White-glove HVU, KOL &amp; UGC onboarding</strong></span><div class="b2c-ch-bar-track"><div class="b2c-ch-fill fill-open-c" style="width:25%"></div></div><span class="b2c-ch-tag tag-open">Open</span></div>
+      <div class="b2c-ch-row"><span class="b2c-ch-name"><strong>Podcast placement (fintech &amp; personal finance)</strong></span><div class="b2c-ch-bar-track"><div class="b2c-ch-fill fill-open-c" style="width:30%"></div></div><span class="b2c-ch-tag tag-open">Open</span></div>
+      <div class="b2c-ch-row"><span class="b2c-ch-name"><strong>LinkedIn personal brand &amp; content marketing</strong></span><div class="b2c-ch-bar-track"><div class="b2c-ch-fill fill-open-c" style="width:28%"></div></div><span class="b2c-ch-tag tag-open">Open</span></div>
+      <div class="b2c-ch-row"><span class="b2c-ch-name"><strong>PPC &amp; retargeting (Meta, Google, YouTube)</strong></span><div class="b2c-ch-bar-track"><div class="b2c-ch-fill fill-open-c" style="width:22%"></div></div><span class="b2c-ch-tag tag-open">Open</span></div>
+      <div class="b2c-ch-row"><span class="b2c-ch-name"><strong>LLM visibility (AI assistant recommendations)</strong></span><div class="b2c-ch-bar-track"><div class="b2c-ch-fill fill-un" style="width:8%"></div></div><span class="b2c-ch-tag tag-unclaimed">Unclaimed</span></div>
+    </div>
+
+    <!-- CHANNELS HEADER -->
+    <div class="ch-head" style="margin-bottom:0;">Our distribution approach</div>
+
+    <!-- CHANNEL SECTIONS -->
+    <div class="ch-sections">
+
+      <!-- CH 1: Distribution Partnerships -->
+      <div class="ch-section">
+        <div class="ch-sec-num-bg">01</div>
+        <div class="ch-sec-top">
+          <span class="ch-sec-badge">Our signature</span>
+          <div class="ch-sec-name">Distribution Partnerships &amp; Co-Marketing</div>
+          <div class="ch-sec-tagline">The highest-leverage channel in this category. One right partnership outperforms six months of KOL campaigns.</div>
+        </div>
+        <div class="ch-sec-body">
+          <div class="ch-sec-desc">
+            <p>When <strong>Kast partnered with Pudgy Penguins</strong> to launch the Pengu Card, Kast brought the compliance stack; Pudgy brought one of crypto&rsquo;s most loyal communities. Neither could have manufactured that launch alone. We map the brand alliances, gaming platforms, and DeFi protocols whose audiences fit your product &mdash; and structure the deal from term sheet to go-live.</p>
+            <p><strong>RedotPay&rsquo;s distribution scaled through this model.</strong> We personally onboarded 100+ high-spending whales whose referrals built the compounding effect that carried their growth phase.</p>
+          </div>
+          <div>
+            <div class="ch-tactics">
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">Deal mapping &amp; counterparty identification</div><div class="ch-tac-desc">Web3 IP, gaming guilds, DeFi protocols &mdash; matched by user-base overlap with your ICP.</div></div></div>
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">Deal structuring &amp; term sheet</div><div class="ch-tac-desc">Rev-share, co-branded design, campaign mechanics. We structure the economics, not just the introduction.</div></div></div>
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">Launch execution &amp; activation</div><div class="ch-tac-desc">We own execution from announcement through first-week performance.</div></div></div>
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">Whale &amp; network seeding</div><div class="ch-tac-desc">Direct outreach to high-spending wallets whose networks compound reach 5&ndash;10&times; organically.</div></div></div>
+            </div>
+            <div class="ch-proof">
+              <div class="ch-proof-lbl">RedotPay &mdash; proof of work</div>
+              <div class="ch-proof-n">100+</div>
+              <div class="ch-proof-desc">High-spending whales personally onboarded. Each referred their network. Distribution reached unicorn trajectory.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CH 2: Protocol Partnerships -->
+      <div class="ch-section">
+        <div class="ch-sec-num-bg">02</div>
+        <div class="ch-sec-top">
+          <span class="ch-sec-badge">Web3 reach</span>
+          <div class="ch-sec-name">Protocol &amp; Product Partnerships</div>
+          <div class="ch-sec-tagline">Embedded distribution that compounds without ongoing spend.</div>
+        </div>
+        <div class="ch-sec-body">
+          <div class="ch-sec-desc">
+            <p>Your card living inside ecosystems your users already trust &mdash; as a native feature, not an ad. Protocol partnerships generate distribution continuously, without campaign budget. A user who finds you through a DeFi interface they already use is structurally higher-intent than one who sees a KOL post.</p>
+            <p>We identify protocols with aligned user bases, structure the integration economics &mdash; rev-share, ecosystem grants, token incentives &mdash; and manage the partnership through to launch.</p>
+          </div>
+          <div class="ch-tactics">
+            <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">DeFi protocol integrations</div><div class="ch-tac-desc">Your card as the natural off-ramp for yield earners and active traders across major protocols.</div></div></div>
+            <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">L2 ecosystem partnerships</div><div class="ch-tac-desc">Ecosystem grants and co-marketing from L2 foundations that want a consumer spending layer on their chain.</div></div></div>
+            <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">White-label &amp; wallet embeds</div><div class="ch-tac-desc">Your card embedded as a native feature in another wallet or app &mdash; distribution where users already are.</div></div></div>
+            <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">RWA &amp; stablecoin platform deals</div><div class="ch-tac-desc">Integrations with tokenization platforms whose users need a real-world spending layer.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CH 3: Creator Activation -->
+      <div class="ch-section">
+        <div class="ch-sec-num-bg">03</div>
+        <div class="ch-sec-top">
+          <span class="ch-sec-badge">Proof of work</span>
+          <div class="ch-sec-name">Creator &amp; KOL Activation</div>
+          <div class="ch-sec-tagline">A campaign-level multiplier. Used at the right moment, the fastest lever for genuine volume signals.</div>
+        </div>
+        <div class="ch-sec-body">
+          <div class="ch-sec-desc">
+            <p>Activated for specific moments: product launches, new market entries, trading competitions. We work with alpha callers and DeFi creators tied to measurable outcomes &mdash; not vanity impressions.</p>
+            <p>For <strong>Ondo Finance</strong>, we led the full trade acquisition engine for Ondo Perps as it scaled to <strong>$5B+ in monthly volume</strong> &mdash; affiliate programs, alpha community outreach, coordinated trading competitions. This is a multiplier on partnership work. Used at the right moment, it&rsquo;s the fastest-moving lever available.</p>
+          </div>
+          <div>
+            <div class="ch-tactics">
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">Alpha caller &amp; KOL selection</div><div class="ch-tac-desc">Matched by product type and audience, not follower count.</div></div></div>
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">Affiliate program design</div><div class="ch-tac-desc">Commission structures and referral mechanics aligned to your actual conversion goals.</div></div></div>
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">Trading competitions &amp; events</div><div class="ch-tac-desc">Coordinated to drive volume and onboarding in a compressed window.</div></div></div>
+            </div>
+            <div class="ch-proof">
+              <div class="ch-proof-lbl">Ondo Finance &mdash; proof of work</div>
+              <div class="ch-proof-n">$5B+</div>
+              <div class="ch-proof-desc">Monthly volume on Ondo Perps. Full trade acquisition engine: affiliate programs, alpha communities, trading competitions.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CH 4: White Glove Onboarding -->
+      <div class="ch-section">
+        <div class="ch-sec-num-bg">04</div>
+        <div class="ch-sec-top">
+          <span class="ch-sec-badge">The force multiplier</span>
+          <div class="ch-sec-name">White Glove Onboarding</div>
+          <div class="ch-sec-tagline">The first 100 users set the trajectory for the next 10,000. We bring them in personally.</div>
+        </div>
+        <div class="ch-sec-body">
+          <div class="ch-sec-desc">
+            <p>Most crypto card companies process signups. We onboard people. For high-value users, KOLs, and UGC partners, we run a 1:1 activation process: direct contact, dedicated support, custom incentives, and early product access. These users become the organic referral engine that a $1M ad budget can&rsquo;t manufacture.</p>
+            <p>The mechanics: identify the right first wave via on-chain data and community signals, bring them in personally, give them reasons to talk. For RedotPay, this was 100+ whales personally onboarded &mdash; not processed through a signup flow. Each referred their own network, and that compounding effect defined the growth trajectory that followed.</p>
+          </div>
+          <div>
+            <div class="ch-tactics">
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">High-value user identification</div><div class="ch-tac-desc">On-chain data and community signals to find whale wallets and spending patterns that match your ICP.</div></div></div>
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">1:1 KOL onboarding</div><div class="ch-tac-desc">Personal outreach, direct contact, early feature access, and custom incentive structures &mdash; not a ticket queue.</div></div></div>
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">UGC partner seeding</div><div class="ch-tac-desc">Resources, early access, and relationship management for creators building organic content around your product.</div></div></div>
+              <div class="ch-tactic"><div class="ch-tac-dot"></div><div><div class="ch-tac-name">Referral flywheel activation</div><div class="ch-tac-desc">Economic incentives designed so each seeded user naturally activates their own network.</div></div></div>
+            </div>
+            <div class="ch-proof">
+              <div class="ch-proof-lbl">RedotPay &mdash; proof of work</div>
+              <div class="ch-proof-n">100+</div>
+              <div class="ch-proof-desc">Whales personally onboarded &mdash; not through a signup flow. Each referred their network. Not processed. Onboarded.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /ch-sections -->
+
+    <!-- WEB2 UA — ELEVATED BLOCK -->
+    <div class="b2c-w2-block">
+      <div class="b2c-w2-head">
+        <div class="b2c-w2-badge">The Undertapped Opportunity</div>
+        <div class="b2c-w2-h">“Web2” User Acquisition</div>
+        <p class="b2c-w2-sub">Every crypto card company is competing in the same six Web3 channels. <strong>None of them have built a “Web2” distribution playbook.</strong> The mainstream user already holding crypto somewhere, already using a card, already listening to a personal finance podcast, is not in their funnel. That user is in yours, if you show up first.</p>
+      </div>
+      <div class="b2c-w2-grid">
+        <div class="b2c-w2-ch">
+          <div class="b2c-w2-ch-label">Paid</div>
+          <div class="b2c-w2-ch-name">PPC &amp; Retargeting</div>
+          <div class="b2c-w2-ch-desc">Meta, Google, and YouTube campaigns targeting financially engaged users who&rsquo;ve signaled crypto interest but haven&rsquo;t converted to a card product. Retargeting closes the loop on hard-won traffic most platforms permanently lose.</div>
+        </div>
+        <div class="b2c-w2-ch">
+          <div class="b2c-w2-ch-label">Long Form</div>
+          <div class="b2c-w2-ch-name">Podcast Placement</div>
+          <div class="b2c-w2-ch-desc">Fintech and personal finance crossover shows where your ICP spends 45 minutes a week trusting the host. We manage the full placement process end-to-end. A single episode reaches an audience no competitor is in.</div>
+        </div>
+        <div class="b2c-w2-ch">
+          <div class="b2c-w2-ch-label">Content</div>
+          <div class="b2c-w2-ch-name">Founder Brand</div>
+          <div class="b2c-w2-ch-desc">Personal brand content positioning your founder as the authority on consumer crypto finance. Reaches financially engaged professionals ready for what you&rsquo;ve built but who&rsquo;ve never seen a product they could trust.</div>
+        </div>
+        <div class="b2c-w2-ch row2-start">
+          <div class="b2c-w2-ch-label">Organic</div>
+          <div class="b2c-w2-ch-name">SEO &amp; Comparison Sites</div>
+          <div class="b2c-w2-ch-desc">High-intent queries like &ldquo;best crypto card 2025&rdquo; drive purchasing decisions. We build the content and directory presence that captures users at the moment they&rsquo;re evaluating options, including NerdWallet-type comparison placements.</div>
+        </div>
+        <div class="b2c-w2-ch">
+          <div class="b2c-w2-ch-label">AI Search</div>
+          <div class="b2c-w2-ch-name">LLM Visibility</div>
+          <div class="b2c-w2-ch-desc">When a user asks ChatGPT or Claude &ldquo;what&rsquo;s the best crypto card?&rdquo;, which product gets mentioned? LLM citation is driven by content authority, structured data, and review ecosystem presence. We build the signals that get you in the answer.</div>
+        </div>
+        <div class="b2c-w2-ch">
+          <div class="b2c-w2-ch-label">Lifecycle</div>
+          <div class="b2c-w2-ch-name">Activation &amp; Engagement</div>
+          <div class="b2c-w2-ch-desc">Email and push sequences that convert signups to active card users. Most crypto card platforms lose 60&ndash;70% of signups before first spend. A structured lifecycle program closes that gap without additional acquisition budget.</div>
+        </div>
+      </div>
+      <div class="b2c-w2-insight"><strong>Why this window is still open:</strong> Web3 companies are optimized for Web3 channels. The operator who runs a flawless KOL campaign doesn&rsquo;t know how to rank a landing page. We have both capabilities. The window closes as soon as one well-funded player figures it out.</div>
+    </div>
+
+    <!-- REDOTPAY CASE STUDY -->
+    <div class="b2c-case" id="b2c-case">
+      <div class="b2c-case-hdr">
+        <div class="b2c-case-hdr-left">
+          <div class="b2c-case-lbl">Case study</div>
+          <img class="b2c-case-logo-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTY1IiBoZWlnaHQ9IjMxIiB2aWV3Qm94PSIwIDAgMTY1IDMxIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTQuOTk0NiAxMi4wNjQ1QzEzLjEwMTUgMTIuMDY0NSAxMS41NjY0IDEzLjU5OTYgMTEuNTY2NCAxNS40OTI3VjE4LjkyMDlIMTQuOTk0NkMxNi44ODc4IDE4LjkyMDkgMTguNDIyOSAxNy4zODU4IDE4LjQyMjkgMTUuNDkyN0MxOC40MjI5IDEzLjU5OTYgMTYuODg3OCAxMi4wNjQ1IDE0Ljk5NDYgMTIuMDY0NVoiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTE0Ljk5MyAwLjVDNi43MTQyNiAwLjUgMCA3LjIxNDI2IDAgMTUuNDkzVjMwLjQ4NjFINi44NTY0N1YxNS40OTNDNi44NTY0NyAxMS4wMDA1IDEwLjUwMDUgNy4zNTY0OSAxNC45OTMgNy4zNTY0OUMxOS40ODU2IDcuMzU2NDkgMjMuMTI5NiAxMS4wMDA1IDIzLjEyOTYgMTUuNDkzQzIzLjEyOTYgMTkuOTg1NiAxOS40ODU2IDIzLjYyOTYgMTQuOTkzIDIzLjYyOTZIMTEuNTY0OFYzMC40ODYxSDE0Ljk5M0MyMy4yNzE4IDMwLjQ4NjEgMjkuOTg2MSAyMy43NzE4IDI5Ljk4NjEgMTUuNDkzQzI5Ljk4NjEgNy4yMTQyNiAyMy4yNzE4IDAuNSAxNC45OTMgMC41WiIgZmlsbD0iI0VCMDAyOCIvPgo8cGF0aCBkPSJNMzYuODQwOCA1LjA5OTYxVjI1Ljg5OTZINDAuMTk1NVYxOC4yMjRMNDcuMDAyOSAyNS44OTk2SDUxLjQ3NThMNDUuMTM0MyAxOC44MzcxQzQ4LjIzODkgMTguMTQwNyA1MC41NjM2IDE1LjM2NDcgNTAuNTYzNiAxMi4wNTQyQzUwLjU2MzYgOC4yMTg4NiA0Ny40NDQ0IDUuMDk5NjEgNDMuNjA5IDUuMDk5NjFIMzYuODM1OUgzNi44NDA4Wk00My42MTQgOC42MzU3NUM0NS40OTI0IDguNjM1NzUgNDcuMDE3NyAxMC4xNzU4IDQ3LjAxNzcgMTIuMDU0MkM0Ny4wMTc3IDEzLjkzMjYgNDUuNDkyNCAxNS40NTc5IDQzLjYxNCAxNS40NTc5SDQzLjU2OThINDAuMjAwNFY4LjYzNTc1SDQzLjYxODlINDMuNjE0WiIgZmlsbD0iI0VCMDAyOCIvPgo8cGF0aCBkPSJNMTEzLjg5OSA1LjA5OTY0VjI1Ljg5OTZIMTE3LjI1NFYxOC45ODkySDEyMC4yNDFDMTIwLjM4OCAxOC45ODkyIDEyMC41NCAxOC45ODkyIDEyMC42NjggMTguOTg5MkMxMjQuNTAzIDE4Ljk4OTIgMTI3LjYyMiAxNS44ODQ2IDEyNy42MjIgMTIuMDQ5M0MxMjcuNjIyIDguMjE0IDEyNC41MDMgNS4wOTQ3MyAxMjAuNjY4IDUuMDk0NzNIMTEzLjg5NUwxMTMuODk5IDUuMDk5NjRaTTEyMC42NzMgOC42MzU3N0MxMjIuNTUxIDguNjM1NzcgMTI0LjA3NiAxMC4xNzU4IDEyNC4wNzYgMTIuMDU0MkMxMjQuMDc2IDEzLjkzMjYgMTIyLjU1MSAxNS40NTc5IDEyMC42NzMgMTUuNDU3OUgxMjAuNjI4SDExNy4yNjlWOC42MzU3N0gxMjAuNjczWiIgZmlsbD0iI0VCMDAyOCIvPgo8cGF0aCBkPSJNODAuNDMxNSAxMS44OTI0Qzc5LjE4MDggMTEuMDE0NSA3Ny42NjA0IDEwLjQ5OTUgNzYuMDE3NCAxMC40OTk1QzcxLjc3MDEgMTAuNDk5NSA2OC4zMTI1IDEzLjk1NzIgNjguMzEyNSAxOC4yMDQ0QzY4LjMxMjUgMjIuNDUxNyA3MS43NzAxIDI1LjkwOTQgNzYuMDE3NCAyNS45MDk0Qzc3LjY2MDQgMjUuOTA5NCA3OS4xODA4IDI1LjM5NDQgODAuNDMxNSAyNC41MTY1VjI1LjkwOTRIODMuNzkxMVY1LjA5NDczSDgwLjQzMTVWMTEuODk3M1YxMS44OTI0Wk03Ni4wMTc0IDIyLjMxNDRDNzMuNzQ2NyAyMi4zMTQ0IDcxLjg5NzcgMjAuNDY1NCA3MS44OTc3IDE4LjE5OTVDNzEuODk3NyAxNS45MzM3IDczLjc0NjcgMTQuMDc5OCA3Ni4wMTc0IDE0LjA3OThDNzguMjg4MiAxNC4wNzk4IDgwLjEzMjMgMTUuOTI4OCA4MC4xMzIzIDE4LjE5OTVDODAuMTMyMyAyMC40NzAzIDc4LjI4MzMgMjIuMzE0NCA3Ni4wMTc0IDIyLjMxNDRaIiBmaWxsPSIjRUIwMDI4Ii8+CjxwYXRoIGQ9Ik0xMDcuNzU1IDcuMjc3MzdIMTA0LjQwMVYxMS4zOTcxSDEwMS4yODFWMTQuMTczMUgxMDQuNDAxVjIxLjA3ODZDMTA0LjQwMSAyMi41MzA0IDEwNC44NDcgMjMuNjk3NiAxMDUuNzMgMjQuNTUxQzEwNi42NDcgMjUuNDM4NyAxMDcuNzExIDI1LjgzMTEgMTA5LjE3NyAyNS44MzExSDExMS4yNjJWMjIuNDc2NEgxMDkuODFDMTA5LjE1OCAyMi40NzY0IDEwOC42NTMgMjIuMjk0OSAxMDguMjk1IDIxLjkzNjlDMTA3Ljk0MiAyMS41Nzg5IDEwNy43NiAyMS4wODM1IDEwNy43NiAyMC40NjU2VjE0LjE2ODJIMTExLjI5NlYxMS4zOTIySDEwNy43NlY3LjI3MjQ2TDEwNy43NTUgNy4yNzczN1oiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTE0OC4wNDUgMzAuNUgxNTIuMDQ4TDE1My42OTEgMjYuNjEwOEwxNjAuODEyIDEwLjQ5OTVIMTU2Ljc1MUwxNTIuNjk1IDIwLjU0ODhMMTQ4Ljg1NSAxMC40OTk1SDE0NC44MjhMMTUwLjY0NSAyNC43ODE0TDE0OC4wNDUgMzAuNVoiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTE0MC4yNjYgMTEuOTk1NEMxMzguOTkxIDExLjA1ODYgMTM3LjQxNyAxMC40OTk1IDEzNS43MTUgMTAuNDk5NUMxMzEuNDcyIDEwLjQ5OTUgMTI4LjAyIDEzLjk1MjMgMTI4LjAyIDE4LjE5NDdDMTI4LjAyIDIyLjQzNzEgMTMxLjQ3MiAyNS44ODk4IDEzNS43MTUgMjUuODg5OEMxMzcuNDE3IDI1Ljg4OTggMTM4Ljk5MSAyNS4zMzU2IDE0MC4yNjYgMjQuMzkzOVYyNS44OTk2SDE0My41OTZWMTAuNTE0MkgxNDAuMjY2VjExLjk5MDVWMTEuOTk1NFpNMTM1LjcyIDIyLjMwOTVDMTMzLjQ1NCAyMi4zMDk1IDEzMS42MDUgMjAuNDY1NCAxMzEuNjA1IDE4LjE5NDdDMTMxLjYwNSAxNS45MjM5IDEzMy40NDkgMTQuMDc5OCAxMzUuNzIgMTQuMDc5OEMxMzcuOTkgMTQuMDc5OCAxMzkuODM0IDE1LjkyMzkgMTM5LjgzNCAxOC4xOTQ3QzEzOS44MzQgMjAuNDY1NCAxMzcuOTkgMjIuMzA5NSAxMzUuNzIgMjIuMzA5NVoiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTkzLjEwNjMgMTAuNTA0NEM4OC44NTkgMTAuNTA0NCA4NS40MDYyIDEzLjk1NzIgODUuNDA2MiAxOC4yMDQ1Qzg1LjQwNjIgMjIuNDUxOCA4OC44NTkgMjUuOTA0NSA5My4xMDYzIDI1LjkwNDVDOTcuMzUzNiAyNS45MDQ1IDEwMC44MDYgMjIuNDUxOCAxMDAuODA2IDE4LjIwNDVDMTAwLjgwNiAxMy45NTcyIDk3LjM1MzYgMTAuNTA0NCA5My4xMDYzIDEwLjUwNDRaTTkzLjEwNjMgMjIuMzE0NEM5MC44MzU1IDIyLjMxNDQgODguOTkxNCAyMC40NjU0IDg4Ljk5MTQgMTguMTk5NUM4OC45OTE0IDE1LjkzMzcgOTAuODQwNCAxNC4wODQ3IDkzLjEwNjMgMTQuMDg0N0M5NS4zNzIyIDE0LjA4NDcgOTcuMjI2MSAxNS45MzM3IDk3LjIyNjEgMTguMTk5NUM5Ny4yMjYxIDIwLjQ2NTQgOTUuMzc3MSAyMi4zMTQ0IDkzLjEwNjMgMjIuMzE0NFoiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTU5LjAwMDkgMTAuNDk5NkM1NC43NTM2IDEwLjQ5OTYgNTEuMzAwOCAxMy45NTIzIDUxLjMwMDggMTguMTk5NkM1MS4zMDA4IDIyLjQ0NjkgNTQuNzUzNiAyNS44OTk3IDU5LjAwMDkgMjUuODk5N0M2MS43Mjc4IDI1Ljg5OTcgNjQuMTggMjQuNDkyMSA2NS41NjMxIDIyLjIyMTNMNjIuMTEwMyAyMC44ODI0QzYxLjM1NSAyMS43NTU0IDYwLjI0MTcgMjIuMzA5NiA1OS4wMDA5IDIyLjMwOTZDNTcuMjUgMjIuMzA5NiA1NS43NDkyIDIxLjIwNjEgNTUuMTU1NyAxOS42NjEySDY2LjU1ODdMNjYuNTczNCAxOS41Nzc4QzY2LjY1NjggMTkuMTE2OCA2Ni43MDA5IDE4LjY1MDggNjYuNzAwOSAxOC4xODk4QzY2LjcwMDkgMTMuOTQyNSA2My4yNDgyIDEwLjQ4OTcgNTkuMDAwOSAxMC40ODk3VjEwLjQ5OTZaTTYyLjgxNjUgMTYuNzMzMkg1NS4xNTU3QzU1Ljc0OTIgMTUuMTgzNCA1Ny4yNSAxNC4wNzk4IDU5LjAwMDkgMTQuMDc5OEM2MC43NTE4IDE0LjA3OTggNjIuMjU3NCAxNS4xODM0IDYyLjg0NiAxNi43MzMySDYyLjgxMTZINjIuODE2NVoiIGZpbGw9IiNFQjAwMjgiLz4KPHBhdGggZD0iTTE2Mi42NzggNS4wOTQ3M0MxNjMuMDMzIDUuMDk0NzMgMTYzLjM1MiA1LjE3NzQzIDE2My42MzQgNS4zNDI4NEMxNjMuOTE1IDUuNTAyMTIgMTY0LjEzNiA1LjcyNTczIDE2NC4yOTUgNi4wMTM2NkMxNjQuNDU1IDYuMjk1NDYgMTY0LjUzNCA2LjYxNDAyIDE2NC41MzQgNi45NjkzNEMxNjQuNTM0IDcuMzI0NjYgMTY0LjQ1NSA3LjY0NjI5IDE2NC4yOTUgNy45MzQyMkMxNjQuMTM2IDguMjIyMTUgMTYzLjkxNSA4LjQ0ODgyIDE2My42MzQgOC42MTQyM0MxNjMuMzUyIDguNzczNTEgMTYzLjAzMyA4Ljg1MzE1IDE2Mi42NzggOC44NTMxNUMxNjIuMzE2IDguODUzMTUgMTYxLjk5NSA4Ljc3MzUxIDE2MS43MTMgOC42MTQyM0MxNjEuNDMxIDguNDQ4ODIgMTYxLjIxMSA4LjIyMjE1IDE2MS4wNTEgNy45MzQyMkMxNjAuODkyIDcuNjQ2MjkgMTYwLjgxMiA3LjMyNDY2IDE2MC44MTIgNi45NjkzNEMxNjAuODEyIDYuNjE0MDIgMTYwLjg5MiA2LjI5NTQ2IDE2MS4wNTEgNi4wMTM2NkMxNjEuMjExIDUuNzI1NzMgMTYxLjQzMSA1LjUwMjEyIDE2MS43MTMgNS4zNDI4NEMxNjEuOTk1IDUuMTc3NDMgMTYyLjMxNiA1LjA5NDczIDE2Mi42NzggNS4wOTQ3M1pNMTYyLjY3OCA4LjQ4NTU4QzE2My4xMTkgOC40ODU1OCAxNjMuNDc0IDguMzQ0NjggMTYzLjc0NCA4LjA2Mjg3QzE2NC4wMiA3Ljc4MTA2IDE2NC4xNTcgNy40MTY1NiAxNjQuMTU3IDYuOTY5MzRDMTY0LjE1NyA2LjUyMjEzIDE2NC4wMiA2LjE1NzYyIDE2My43NDQgNS44NzU4MkMxNjMuNDc0IDUuNTk0MDEgMTYzLjExOSA1LjQ1MzExIDE2Mi42NzggNS40NTMxMUMxNjIuMjMxIDUuNDUzMTEgMTYxLjg3MiA1LjU5NDAxIDE2MS42MDMgNS44NzU4MkMxNjEuMzM5IDYuMTU3NjIgMTYxLjIwOCA2LjUyMjEzIDE2MS4yMDggNi45NjkzNEMxNjEuMjA4IDcuNDE2NTYgMTYxLjMzOSA3Ljc4MTA2IDE2MS42MDMgOC4wNjI4N0MxNjEuODcyIDguMzQ0NjggMTYyLjIzMSA4LjQ4NTU4IDE2Mi42NzggOC40ODU1OFpNMTYzLjUwNSA2LjU4MzM5QzE2My41MDUgNi43MzA0MiAxNjMuNDY1IDYuODU2MDEgMTYzLjM4NiA2Ljk2MDE1QzE2My4zMTIgNy4wNTgxNyAxNjMuMjA4IDcuMTI4NjIgMTYzLjA3MyA3LjE3MTUxTDE2My41ODggNy45MzQyMkwxNjMuMDA5IDcuOTQzNDFMMTYyLjU2OCA3LjIwODI3SDE2Mi40MTFWNy45NDM0MUgxNjEuOTM0VjUuOTY3NzFIMTYyLjgxNkMxNjMuMDI0IDUuOTY3NzEgMTYzLjE4OSA2LjAyMjg1IDE2My4zMTIgNi4xMzMxMkMxNjMuNDQxIDYuMjQzMzkgMTYzLjUwNSA2LjM5MzQ4IDE2My41MDUgNi41ODMzOVpNMTYyLjQxMSA2LjgxMzEzSDE2Mi43ODhDMTYyLjg1NiA2LjgxMzEzIDE2Mi45MTEgNi43OTQ3NSAxNjIuOTU0IDYuNzU3OTlDMTYzLjAwMyA2LjcyMTIzIDE2My4wMjcgNi42NjkxNiAxNjMuMDI3IDYuNjAxNzdDMTYzLjAyNyA2LjUzNDM4IDE2My4wMDMgNi40ODUzNyAxNjIuOTU0IDYuNDU0NzRDMTYyLjkxMSA2LjQxNzk5IDE2Mi44NTYgNi4zOTk2MSAxNjIuNzg4IDYuMzk5NjFIMTYyLjQxMVY2LjgxMzEzWiIgZmlsbD0iI0VCMDAyOCIvPgo8L3N2Zz4K" alt="RedotPay">
+          <div class="b2c-case-headline">From distribution challenge to unicorn trajectory.</div>
+        </div>
+      </div>
+      <div class="b2c-case-mstrip">
+        <div class="b2c-case-msstat">
+          <div class="b2c-case-mn">$107M</div>
+          <div class="b2c-case-ml">Series B raised</div>
+        </div>
+        <div class="b2c-case-msstat">
+          <div class="b2c-case-mn">100+</div>
+          <div class="b2c-case-ml">Whales personally onboarded</div>
+        </div>
+      </div>
+      <div class="b2c-case-story-v2">
+        <p>RedotPay had the product. The challenge was distribution. We served as strategic advisor through a key growth phase, focused on high-value user seeding. <strong>We personally onboarded 100+ high-spending whales</strong> through direct outreach and network relationships: users whose spending patterns validated the product and whose referrals activated their own networks.</p>
+        <p>We identified structural fits between RedotPay&rsquo;s card and ecosystems where high-intent users already lived, seeded the first wave with the right economic incentives, and let the referral flywheel compound. RedotPay closed a <strong>$107M Series B</strong> as that work matured, reaching unicorn trajectory.</p>
+      </div>
+    </div>
+
+    <!-- WHY NOW -->
+    <div class="b2c-why-now">
+      <div class="b2c-wn-head">
+        <div class="b2c-wn-lbl">The window</div>
+        <div class="b2c-wn-h">Three reasons the “Web2” UA opportunity is now, not later</div>
+      </div>
+      <div class="b2c-wn-rows">
+        <div class="b2c-wn-row">
+          <div class="b2c-wn-row-h">The mainstream crypto user is emerging</div>
+          <div class="b2c-wn-row-body">617M people globally hold crypto. The user sitting on $3K in a Coinbase account who&rsquo;s never touched a crypto card is not in your funnel today &mdash; but will be in someone&rsquo;s within 18 months. Whoever shows up first earns the category position.</div>
+        </div>
+        <div class="b2c-wn-row">
+          <div class="b2c-wn-row-h">Your competitors are structurally stuck</div>
+          <div class="b2c-wn-row-body">KOL shops and CT agencies cannot pivot to podcast placements and paid acquisition. Web3 distribution teams don&rsquo;t have “Web2” infrastructure. There&rsquo;s no overlap in who knows how to do both.</div>
+        </div>
+        <div class="b2c-wn-row">
+          <div class="b2c-wn-row-h">First-mover in “Web2” channels compounds</div>
+          <div class="b2c-wn-row-body">SEO authority built this year is a moat. The podcast host who&rsquo;s had you on once thinks of you first. The LinkedIn audience around your founder takes 12 months to replicate. These channels reward early presence with durable returns.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="scta">
+      <div>
+        <h3>Ready to build a distribution strategy that goes beyond Web3?</h3>
+        <p>We scope the right channel mix for your product and audience in the first call.</p>
+      </div>
+      <a href="https://calendar.app.google/jF7b8wFvyEPSVvEAA" target="_blank" rel="noopener" class="btn btn-p">Book a call &rarr;</a>
+    </div>
+
+  </div><!-- /w -->
+</section>
+
+<!-- ═══════════════ B2B CRYPTOBANKS ═══════════════ -->
+<section class="sec" id="b2b">
+
+  <div class="b2b-hero">
+    <div class="w">
+      <div class="b2b-eyebrow">B2B Cryptobanks</div>
+      <h2 class="b2b-hero-h">Your buyers aren&rsquo;t on<br><span class="g">Crypto Twitter.</span></h2>
+      <p class="b2b-hero-sub">The businesses that need your product search Google, ask ChatGPT, and compare options on LinkedIn. We build the GTM engine that puts you where they actually look.</p>
+
+      <div class="b2b-proof-strip">
+        <div class="b2b-proof">
+          <div class="b2b-proof-name">Bloomfi</div>
+          <div class="b2b-proof-line"><strong>160 ICP targets</strong> mapped, outreach sequences built, converted directly into booked calls.</div>
+        </div>
+        <div class="b2b-proof">
+          <div class="b2b-proof-name">Ondo Finance</div>
+          <div class="b2b-proof-line">Led trade acquisition as Ondo Perps scaled to <strong>$5B+ monthly volume.</strong></div>
+        </div>
+        <div class="b2b-proof">
+          <div class="b2b-proof-name">MPM Labs</div>
+          <div class="b2b-proof-line">Our own B2B pipeline was built through the same LinkedIn BD and content system we run for clients.</div>
+        </div>
+      </div>
+
+      <div class="b2b-hero-ctas">
+        <a href="https://calendar.app.google/jF7b8wFvyEPSVvEAA" target="_blank" rel="noopener" class="btn btn-p">Book a call &rarr;</a>
+        <button class="btn btn-o" onclick="document.querySelector('#b2b .ch-head').scrollIntoView({behavior:'smooth'})">See how we fix it &darr;</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="w">
+    <div class="sub" style="padding-top:0;">
+
+      <div class="b2b-problems">
+        <div class="b2b-problem">
+          <div class="b2b-problem-h">When they search, you&rsquo;re invisible.</div>
+          <p class="b2b-problem-p">&ldquo;Best stablecoin business account Singapore.&rdquo; &ldquo;USD treasury for e-commerce.&rdquo; These queries happen thousands of times a month. If you&rsquo;re absent from the search results, the AI answers, the comparison content, someone else fills that space.</p>
+        </div>
+        <div class="b2b-problem">
+          <div class="b2b-problem-h">The crypto agency playbook doesn&rsquo;t apply here.</div>
+          <p class="b2b-problem-p">Token launches, community campaigns, airdrop mechanics. That&rsquo;s the standard crypto marketing toolkit. Your buyer is a CFO or ops lead evaluating financial infrastructure. They decide based on search results, peer referrals, and trusted advisors.</p>
+        </div>
+        <div class="b2b-problem">
+          <div class="b2b-problem-h">Your team posts on X. Your buyers live on LinkedIn.</div>
+          <p class="b2b-problem-p">The people evaluating your product follow industry peers, read operator case studies, and ask their network before they ever visit your site. The channels that earn their attention are a different discipline from crypto marketing.</p>
+        </div>
+      </div>
+
+      <h3 class="b2b-bridge-h">We put you where they actually look.</h3>
+      <p class="b2b-bridge-sub">13 execution modules across four layers. Each one targets a specific place your ICP researches, compares, and decides.</p>
+
+      <div class="ch-head" style="border-top:1px solid var(--line2);padding-top:32px;margin-top:8px;">Where they&rsquo;re already looking</div>
+      <p style="color:var(--ink2);font-size:.95rem;margin:4px 0 16px;">Your ICP is searching right now. These channels capture existing demand from day one.</p>
+
+      <div class="epaths" style="margin:0 0 48px;">
+        <div class="epath">
+          <div class="epath-num">01</div>
+          <div class="epath-name">Retargeting and Paid Acquisition</div>
+          <div class="epath-thesis">Meta, Google, YouTube, and LinkedIn ABM targeting finance decision-makers at businesses in your target geographies. Creative produced by Sourmilk Studios for rapid variant testing. First measurable lead lift in 30 days.</div>
+        </div>
+        <div class="epath">
+          <div class="epath-num">02</div>
+          <div class="epath-name">LLM Visibility and Answer-Engine Optimization</div>
+          <div class="epath-thesis">When a finance lead asks ChatGPT or Claude which stablecoin business account to use, you should be named. We seed presence on the sources models cite: Reddit, comparison content, review sites, directories, structured data on your domain. Tracked weekly against named competitors.</div>
+        </div>
+        <div class="epath">
+          <div class="epath-num">03</div>
+          <div class="epath-name">Bottom-of-Funnel SEO</div>
+          <div class="epath-thesis">&ldquo;Best stablecoin business account Singapore.&rdquo; &ldquo;USD account for e-commerce.&rdquo; People searching these have a card out. Comparison pages, alternative pages, jurisdiction-specific landing pages. These are the same assets that feed LLM citations.</div>
+        </div>
+        <div class="epath">
+          <div class="epath-num">04</div>
+          <div class="epath-name">Conversion and Onboarding Audit</div>
+          <div class="epath-thesis">Every lead you generate lands in your funnel. We audit signup-to-funded-account end to end, instrument the drop-off points, and hand back a prioritized fix list. The cheapest lead source is the one you are already paying for and losing.</div>
+        </div>
+      </div>
+
+      <div class="ch-head" style="border-top:1px solid var(--line2);padding-top:32px;margin-top:8px;">Channels that compound</div>
+      <p style="color:var(--ink2);font-size:.95rem;margin:4px 0 16px;">Slower to start, higher ceiling. Each month of investment makes the next one more effective.</p>
+
+      <div class="epaths" style="margin:0 0 48px;">
+        <div class="epath">
+          <div class="epath-num">05</div>
+          <div class="epath-name">Team Personal-Brand Funnel</div>
+          <div class="epath-thesis">Orchestrated LinkedIn and X content across founder and team accounts. Real operational insight, not LinkedIn slop. Doubles as top-of-funnel awareness and BD warm-up. Reply rates climb materially when the sender has a real presence. MPM&rsquo;s own commercial pipeline was built through this system.</div>
+        </div>
+        <div class="epath">
+          <div class="epath-num">06</div>
+          <div class="epath-name">LinkedIn BD Amplification</div>
+          <div class="epath-thesis">ICP list-building, connection sequencing, and engagement on prospect content so your team walks into warm conversations. Supports your BD function directly. Works best alongside Module 05.</div>
+        </div>
+        <div class="epath">
+          <div class="epath-num">07</div>
+          <div class="epath-name">Lifecycle and Email</div>
+          <div class="epath-thesis">Onboarding sequences, activation nudges for signed-up-but-not-funded accounts, re-engagement flows for dormant ones. Built once, handed off to your team to run. Sits directly on top of the conversion audit.</div>
+        </div>
+        <div class="epath">
+          <div class="epath-num">08</div>
+          <div class="epath-name">Partnership-Led Distribution</div>
+          <div class="epath-thesis">Your ICP already trusts other advisors: company formation agents, e-commerce accountants, payroll services, treasury consultants. One partnership delivers a pipeline of qualified accounts rather than one lead at a time. We build the target list, run the outreach, and structure the referral mechanics.</div>
+        </div>
+      </div>
+
+      <div class="ch-head" style="border-top:1px solid var(--line2);padding-top:32px;margin-top:8px;">Own the category</div>
+      <p style="color:var(--ink2);font-size:.95rem;margin:4px 0 16px;">For teams ready to be the name people think of first.</p>
+
+      <div class="epaths" style="margin:0 0 48px;">
+        <div class="epath">
+          <div class="epath-num">09</div>
+          <div class="epath-name">Hero Video and Launch Moment</div>
+          <div class="epath-thesis">A high-production platform film followed by coordinated distribution through finance creators. Produced by Polify (Whoop, Rain, Bet). Recommended once your demand capture channels are proving out.</div>
+        </div>
+        <div class="epath">
+          <div class="epath-num">10</div>
+          <div class="epath-name">Competitor Ad Teardown and Creative Recreation</div>
+          <div class="epath-thesis">We track what converts for adjacent players, identify the highest-performing hooks and UGC formats, and rebuild them for your brand. Cheap input that makes paid acquisition meaningfully better.</div>
+        </div>
+        <div class="epath">
+          <div class="epath-num">11</div>
+          <div class="epath-name">Ongoing Content Studio</div>
+          <div class="epath-thesis">Clip and creative production feeding paid, personal-brand, and video channels. Add when those modules are hungry for assets faster than your team can produce them.</div>
+        </div>
+      </div>
+
+      <div class="ch-head" style="border-top:1px solid var(--line2);padding-top:32px;margin-top:8px;">The infrastructure</div>
+      <p style="color:var(--ink2);font-size:.95rem;margin:4px 0 16px;">Recommended regardless of which modules you run.</p>
+
+      <div class="epaths" style="margin:0 0 48px;">
+        <div class="epath">
+          <div class="epath-num">12</div>
+          <div class="epath-name">Measurement and Attribution</div>
+          <div class="epath-thesis">Right now there is likely no clean way to attribute a funded account back to a source. We instrument analytics, CRM source-tagging, and a single lead dashboard. Without this, every module above is a guess.</div>
+        </div>
+        <div class="epath">
+          <div class="epath-num">13</div>
+          <div class="epath-name">Podcast Placement</div>
+          <div class="epath-thesis">Founder appearances on entrepreneur shows, fintech content, and global payments conversations. We handle the full placement process. A single well-placed episode builds category authority that compounds for months after air.</div>
+        </div>
+      </div>
+
+      <div class="bridge">
+        <h3>Bloomfi: B2B GTM from scratch</h3>
+        <p>Bloomfi is an EVM chain launching with no marketing function in place. We built both B2C &amp; B2B GTM playbooks side by side. The B2B track identified payment dApps and neobanks as integration targets, produced a 160-project ICP list, booked calls with each, and ran warm intros to projects like Ondo. We delivered a week-by-week plan covering BD outreach, partnerships, and developer acquisition and are helping attract &amp; onboard tier 1 builders for their grant program.</p>
+      </div>
+
+      <div class="scta">
+        <div>
+          <h3>Ready to build your B2B pipeline?</h3>
+          <p>We scope the right modules for your product, ICP, and geography in the first call.</p>
+        </div>
+        <a href="https://calendar.app.google/jF7b8wFvyEPSVvEAA" target="_blank" rel="noopener" class="btn btn-p">Book a call &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ WEB2 NEOBANKS ═══════════════ -->
+<section class="sec" id="web2">
+  <div class="w">
+    <div class="sub">
+      <h2 class="sub-title">Crypto became Revolut&rsquo;s biggest revenue line. It started with the same users you already have.</h2>
+      <p class="sub-lead">You have the users, the trust, and the product infrastructure. The only missing piece is entry into a financial layer your competitors are already capitalizing on. This is the full map: every viable entry path, who’s already there, and how to move on it.</p>
+
+      <div class="mpair">
+        <div class="mbox">
+          <div class="mbox-lbl">Your profile</div>
+          <div class="mbox-body">A Mercury, Wise, or Revolut-type product. Real users, real product, not in crypto today. You&rsquo;re watching the category evolve fast enough that the question is no longer whether to enter. It’s when and how to enter on your terms.</div>
+        </div>
+        <div class="mbox">
+          <div class="mbox-lbl">Your hidden leverage</div>
+          <div class="mbox-body">Your non-crypto users are exactly what Web3 projects have spent years trying to reach. When Juno integrated Ondo Finance, Ondo structured the commercial terms around Juno&rsquo;s user base: they needed the distribution more than Juno needed the yield. That&rsquo;s the position you walk into every partnership conversation with.</div>
+        </div>
+      </div>
+
+      <div class="istats">
+        <div class="ist"><div class="ist-n">$759M</div><div class="ist-l">Crypto card spend / month</div></div>
+        <div class="ist"><div class="ist-n">$23B</div><div class="ist-l">Monthly tokenized stock volume (was $53M a year ago)</div></div>
+        <div class="ist"><div class="ist-n">5&ndash;8%</div><div class="ist-l">APY on stablecoin balances</div></div>
+        <div class="ist"><div class="ist-n">$600B</div><div class="ist-l">Annual remittance market where SWIFT charges 3&ndash;7%</div></div>
+      </div>
+
+      <div class="ep-hd">Six entry paths: different risk profiles, different revenue models, different timelines</div>
+
+      <div class="epaths">
+
+        <div class="epath">
+          <div class="epath-num">01</div>
+          <div class="epath-name">Stablecoin Yield &amp; Savings</div>
+          <div class="epath-thesis">5&ndash;8% APY on deposits via stablecoin protocols. Traditional savings delivers 0.5%. The most defensible differentiator available to a neobank today.</div>
+          <div class="epath-facts">
+            <div class="epf"><span class="epf-l">Already here</span><span class="epf-v">Juno (pioneered), Revolut (partial), EU neobanks in beta</span></div>
+            <div class="epf"><span class="epf-l">Revenue</span><span class="epf-v">Yield spread: earn 8%, pay users 5&ndash;6%, keep the margin</span></div>
+            <div class="epf"><span class="epf-l">Timeline</span><span class="epf-v">3&ndash;6 months &nbsp;&middot;&nbsp; Medium regulatory</span></div>
+          </div>
+        </div>
+
+        <div class="epath">
+          <div class="epath-num">02</div>
+          <div class="epath-name">Crypto Buy / Sell / Hold</div>
+          <div class="epath-thesis">Table stakes by 2025. Revolut earns more here than any other product line. A gap here is a liability with higher-LTV segments.</div>
+          <div class="epath-facts">
+            <div class="epf"><span class="epf-l">Already here</span><span class="epf-v">Revolut, Cash App, PayPal, Chime, N26, Monzo</span></div>
+            <div class="epf"><span class="epf-l">Revenue</span><span class="epf-v">1.5&ndash;2.5% trading spread; Revolut&rsquo;s #1 revenue line</span></div>
+            <div class="epf"><span class="epf-l">Timeline</span><span class="epf-v">3&ndash;5 months &nbsp;&middot;&nbsp; High regulatory</span></div>
+          </div>
+        </div>
+
+        <div class="epath">
+          <div class="epath-num">03</div>
+          <div class="epath-name">Crypto Card &amp; Rewards</div>
+          <div class="epath-thesis">$759M/month in crypto card spend, growing 2.5&times; YoY. Every player today is crypto-native. The “Web2” neobank position is completely unclaimed.</div>
+          <div class="epath-facts">
+            <div class="epf"><span class="epf-l">Already here</span><span class="epf-v">RedotPay, Kast, EtherFi, Nexo, Bitget Card</span></div>
+            <div class="epf"><span class="epf-l">Revenue</span><span class="epf-v">Interchange (1.5&ndash;2%) + FX conversion spread</span></div>
+            <div class="epf"><span class="epf-l">Timeline</span><span class="epf-v">6&ndash;10 months &nbsp;&middot;&nbsp; Moderate regulatory</span></div>
+          </div>
+        </div>
+
+        <div class="epath">
+          <div class="epath-num">04</div>
+          <div class="epath-name">Cross-Border Stablecoin Payments</div>
+          <div class="epath-thesis">$600B remittance market. SWIFT fees run 3&ndash;7%. Stablecoin transfers cost cents. The most direct competitive threat to Wise&rsquo;s core business.</div>
+          <div class="epath-facts">
+            <div class="epf"><span class="epf-l">Already here</span><span class="epf-v">MoneyGram (Stellar), Ripple ODL, Circle Pay, Yellow Card</span></div>
+            <div class="epf"><span class="epf-l">Revenue</span><span class="epf-v">FX spread (undercut SWIFT, still margin-positive)</span></div>
+            <div class="epf"><span class="epf-l">Timeline</span><span class="epf-v">4&ndash;8 months &nbsp;&middot;&nbsp; Moderate regulatory</span></div>
+          </div>
+        </div>
+
+        <div class="epath">
+          <div class="epath-num">05</div>
+          <div class="epath-name">Tokenized Real-World Assets</div>
+          <div class="epath-thesis">T-bills, money market funds, private credit through a familiar interface. Tokenized stock volume: $53M to $23B/month in one year. BlackRock and Franklin Templeton already live.</div>
+          <div class="epath-facts">
+            <div class="epf"><span class="epf-l">Already here</span><span class="epf-v">BlackRock BUIDL, Franklin Templeton, Ondo Finance</span></div>
+            <div class="epf"><span class="epf-l">Revenue</span><span class="epf-v">Distribution or management fee split with asset issuer</span></div>
+            <div class="epf"><span class="epf-l">Timeline</span><span class="epf-v">6&ndash;12 months &nbsp;&middot;&nbsp; High regulatory</span></div>
+          </div>
+        </div>
+
+        <div class="epath">
+          <div class="epath-num">06</div>
+          <div class="epath-name">Agentic Banking &amp; AI Payments</div>
+          <div class="epath-thesis">AI agents need wallets and stablecoin rails. No neobank has moved here yet. In 12&ndash;18 months this category will have a clear owner.</div>
+          <div class="epath-facts">
+            <div class="epf"><span class="epf-l">Already here</span><span class="epf-v">Coinbase AgentKit, Skyfire, PaymanAI (infrastructure-layer only)</span></div>
+            <div class="epf"><span class="epf-l">Revenue</span><span class="epf-v">Transaction fees, B2B wallet provisioning, float on balances</span></div>
+            <div class="epf"><span class="epf-l">Timeline</span><span class="epf-v">3&ndash;6 months &nbsp;&middot;&nbsp; Low to medium regulatory</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="w2-scope">Not sure which of these maps to your situation? <a href="https://calendar.app.google/NEjpCJ77suyUEYZQ9" target="_blank" rel="noopener">We'll tell you in 30 minutes &rarr;</a></p>
+
+      <div class="motions">
+        <div class="motion">
+          <div class="m-tag">Entry map</div>
+          <div>
+            <div class="m-h">Entry Mapping &amp; Vertical Selection</div>
+            <div class="m-body"><p>The six paths above are not equally accessible for every product. Your user demographics, regulatory position, existing card program, and competitive landscape each change the calculus. We assess your situation and identify which path produces the fastest, highest-return result, with a realistic build sequence. The first call is a scoping session.</p></div>
+          </div>
+        </div>
+        <div class="motion">
+          <div class="m-tag">Network</div>
+          <div>
+            <div class="m-h">Infrastructure Partner Introductions</div>
+            <div class="m-body"><p>Ondo Finance, Fireblocks, Kast, Circle, and most of the custody and card programs behind the paths above: we know these teams. Most neobanks spend the first six months just figuring out who to call. A warm intro to the right counterparty on day one changes the shape of the whole project.</p></div>
+          </div>
+        </div>
+        <div class="motion">
+          <div class="m-tag">Distribution</div>
+          <div>
+            <div class="m-h">Web3 Co-Marketing: Your Distribution Leverage</div>
+            <div class="m-body"><p>You arrive as a mainstream financial brand with something Web3 projects have been trying to buy for years: users who have never touched crypto before. DeFi protocols, tokenization platforms, and L2 chains will co-market and structure favorable commercial deals to reach your user base. We identify the right counterparties, structure those partnerships, and execute through to launch.</p></div>
+          </div>
+        </div>
+        <div class="motion">
+          <div class="m-tag">Positioning</div>
+          <div>
+            <div class="m-h">Category Credibility Before Launch</div>
+            <div class="m-body"><p>Six months before you launch, your founders should already be known quantities in the crypto space: the names journalists call when they want a neobank&rsquo;s take on stablecoins. We build that presence: the content, the podcast appearances, the narrative that frames the expansion on your terms. By the time you go live, the protocols you&rsquo;re pitching already know who you are.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scta">
+        <div>
+          <h3>Which of the six paths fits your product?</h3>
+          <p>We scope that in the first call: user demographics, regulatory position, and fastest path to revenue.</p>
+        </div>
+        <a href="https://calendar.app.google/NEjpCJ77suyUEYZQ9" target="_blank" rel="noopener" class="btn btn-p">Book a call &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ GTM PLAYBOOK ═══════════════ -->
+<section class="sec" id="gtm">
+
+  <div class="gtm-hero">
+    <div class="w">
+      <h2 class="gtm-hero-h">Every channel we run.<br><span class="g">For all three profiles.</span></h2>
+      <p class="gtm-hero-sub">Two distribution worlds, almost no overlap in the teams who know how to operate in both. We&rsquo;ve built infrastructure in each. Here is the full approach, tactic by tactic, and where the two worlds connect.</p>
+    </div>
+  </div>
+
+  <div class="w" style="padding-top:40px;padding-bottom:80px;">
+
+    <div class="gtm-cols">
+      <div class="gtm-col">
+        <div class="gtm-col-top">
+          <div class="gtm-col-lbl">Channel one</div>
+          <div class="gtm-col-h">Web3 Distribution</div>
+        </div>
+        <div class="gtm-item">
+          <div class="gtm-item-name">Distribution Partnerships &amp; Co-Marketing</div>
+          <div class="gtm-item-desc">Our signature capability. We identify the brand alliance where both sides have what the other needs, structure the deal, and execute end to end. The Kast &times; Pudgy Penguins Pengu Card launch is the clearest model: Kast’s card infrastructure met Pudgy’s community trust. Neither built what the other had. Neither could have replicated the outcome alone.</div>
+        </div>
+        <div class="gtm-item">
+          <div class="gtm-item-name">Protocol &amp; Product Partnerships</div>
+          <div class="gtm-item-desc">Embedded product deals, white-label arrangements, and rev-share structures with DeFi protocols, L2 chains, and tokenization platforms. Your product lives inside ecosystems your target users already use daily. Distribution that compounds.</div>
+        </div>
+        <div class="gtm-item">
+          <div class="gtm-item-name">Creator &amp; KOL Activation</div>
+          <div class="gtm-item-desc">Alpha channels, trading communities, DeFi content creators, activated for specific campaign moments. We led trade acquisition for Ondo Perps as it scaled to $5B+ in monthly volume through affiliate programs, alpha community outreach, and trading competitions.</div>
+        </div>
+        <div class="gtm-item">
+          <div class="gtm-item-name">Ambassador &amp; Referral Programs</div>
+          <div class="gtm-item-desc">Structured programs with real economic incentives (rev share, points multipliers, exclusive perks) that turn high-performing users into distribution agents. Sustained activation across quarters.</div>
+        </div>
+        <div class="gtm-item">
+          <div class="gtm-item-name">Trading Competitions &amp; Activation Events</div>
+          <div class="gtm-item-desc">Volume-driving campaigns coordinated with market-making platforms and community partners. Used to establish momentum at launch or reactivate users around new features.</div>
+        </div>
+      </div>
+
+      <div class="gtm-col">
+        <div class="gtm-col-top">
+          <div class="gtm-col-lbl">Channel two</div>
+          <div class="gtm-col-h">“Web2” Distribution</div>
+        </div>
+        <div class="gtm-item">
+          <div class="gtm-item-name">LinkedIn: Personal Brand as BD</div>
+          <div class="gtm-item-desc">ICP list-building, outreach cadences from founder and team accounts, content engagement with prospects, and a consistent publishing system that converts LinkedIn presence into pipeline. MPM&rsquo;s own commercial pipeline was built almost entirely through this system.</div>
+        </div>
+        <div class="gtm-item">
+          <div class="gtm-item-name">Content &amp; Thought Leadership</div>
+          <div class="gtm-item-desc">Frameworks and market reads written with your team&rsquo;s proprietary insight. The analysis a decision-maker shares with their business partner. Published from accounts that compound in authority over time.</div>
+        </div>
+        <div class="gtm-item">
+          <div class="gtm-item-name">Partnerships &amp; Co-Marketing</div>
+          <div class="gtm-item-desc">Referral network structures, co-marketing arrangements, and embedded product deals with adjacent “Web2” platforms. The same partnership logic that drives Web3 co-marketing, applied to traditional fintech distribution.</div>
+        </div>
+        <div class="gtm-item">
+          <div class="gtm-item-name">Podcast Placement</div>
+          <div class="gtm-item-desc">We book your team on the right shows (fintech, crypto, entrepreneur, industry-specific) and handle the full placement process. One well-placed episode reaches the right audience in a context they trust and compounds for months after air.</div>
+        </div>
+        <div class="gtm-item">
+          <div class="gtm-item-name">PPC &amp; Retargeting</div>
+          <div class="gtm-item-desc">Meta, Google, and YouTube retargeting that recaptures users who found you but didn&rsquo;t convert. Most crypto and fintech products send hard-won traffic to a website and lose it permanently. Retargeting closes that loop.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bridge">
+      <h3>Where the two worlds connect</h3>
+      <p>For <strong>B2C and B2B Cryptobanks</strong>: “Web2” is almost entirely unclaimed by your competitors. LinkedIn, podcasts, and paid distribution reach an audience orders of magnitude larger than any Web3 community, and they’re increasingly ready for what you’ve built. The window to establish category authority in these channels is still open.</p>
+      <p>For <strong>“Web2” Neobanks entering crypto</strong>: the Web3 distribution world is wide-open territory for you. You arrive carrying mainstream users that Web3 projects have been trying to acquire for years. That makes you a distribution partner with real leverage, with access to audiences no competitor is also targeting.</p>
+    </div>
+
+    <div class="scta">
+      <div>
+        <h3>Want to map out the right channel mix?</h3>
+        <p>We put together a concrete distribution strategy for your product in the first session.</p>
+      </div>
+      <a href="https://calendar.app.google/jF7b8wFvyEPSVvEAA" target="_blank" rel="noopener" class="btn btn-p">Book a call &rarr;</a>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<script>
+(function(){
+  var tabs = document.querySelectorAll('.ntab, .nav-gtm');
+  var secs = document.querySelectorAll('.sec');
+  var cards = document.querySelectorAll('[data-s]:not(.ntab):not(.nav-gtm)');
+  var valid = ['home','b2c','b2b','web2','gtm'];
+
+  function show(id, push){
+    if(valid.indexOf(id)===-1) id='home';
+    secs.forEach(function(s){s.classList.toggle('on',s.id===id);});
+    tabs.forEach(function(t){t.classList.toggle('on',t.dataset.s===id);});
+    if(push!==false){
+      history.pushState({s:id},'',id==='home'?'/':'/'+id);
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.s);});});
+  cards.forEach(function(c){
+    c.addEventListener('click',function(){show(c.dataset.s);});
+    c.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();show(c.dataset.s);}
+    });
+  });
+  window.addEventListener('popstate',function(e){
+    show(e.state&&e.state.s||'home',false);
+  });
+
+  var init=(window.location.pathname.replace(/^\//,'')||'home');
+  show(init,false);
+  window.show=function(id){show(id);};
+})();
+</script>
+</body>
+</html>
