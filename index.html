@@ -132,8 +132,7 @@ a{text-decoration:none;color:inherit;}
 
 /* hero */
 .hero{
-  padding:88px 0 72px;
-  border-bottom:1px solid var(--line);
+  padding:120px 0 110px;
   position:relative;overflow:hidden;
 }
 .hero-vid{
@@ -142,7 +141,8 @@ a{text-decoration:none;color:inherit;}
 }
 .hero-overlay{
   position:absolute;top:0;left:0;width:100%;height:100%;
-  background:rgba(11,11,11,.72);z-index:1;
+  background:linear-gradient(to bottom,rgba(11,11,11,.70) 50%,rgba(11,11,11,1) 100%);
+  z-index:1;
 }
 .hero .w{position:relative;z-index:2;}
 .hero-tag{
@@ -364,12 +364,12 @@ a{text-decoration:none;color:inherit;}
 .scta h3{font-size:17px;font-weight:600;color:var(--ink);margin-bottom:3px;letter-spacing:-.01em;}
 .scta p{font-size:13px;font-weight:300;color:var(--ink2);}
 
-/* web2 inline scope CTA */
+/* digital banks inline scope CTA */
 .w2-scope{font-size:13px;color:var(--ink3);margin:-20px 0 44px;font-weight:300;}
 .w2-scope a{color:var(--green, #4A7C59);text-decoration:none;font-weight:500;}
 .w2-scope a:hover{text-decoration:underline;}
 
-/* entry paths (web2 section) */
+/* entry paths (digital banks section) */
 #web2{--brass:#4A7C59;}
 #b2b .epath-num{color:var(--purple);}
 #web2 .istats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;flex-wrap:unset;border-bottom:1px solid var(--line2);margin-bottom:48px;}
@@ -403,7 +403,7 @@ a{text-decoration:none;color:inherit;}
 .epf:last-child{border-bottom:none;}
 .epf-l{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--brass);opacity:.65;padding-top:2px;}
 .epf-v{font-size:11.5px;font-weight:300;color:var(--ink2);line-height:1.45;}
-/* web2 motion rows (services) */
+/* digital banks motion rows (services) */
 .motions{margin:32px 0 48px;}
 .motion{
   display:grid;grid-template-columns:108px 1fr;gap:24px;
@@ -476,7 +476,7 @@ a{text-decoration:none;color:inherit;}
 .pstat-logo img{height:22px;width:auto;max-width:120px;object-fit:contain;filter:brightness(0) invert(1);opacity:.7;}
 /* responsive tweaks */
 @media(max-width:600px){
-  .hero{padding:60px 0 48px;}
+  .hero{padding:80px 0 72px;}
   .hcta-box{padding:28px 24px;flex-direction:column;align-items:flex-start;}
   .scta{flex-direction:column;align-items:flex-start;}
 }
@@ -705,7 +705,7 @@ a{text-decoration:none;color:inherit;}
 }
 .ch-proof-desc{font-size:12px;font-weight:300;color:var(--ink2);line-height:1.55;}
 
-/* Web2 UA elevated block */
+/* Mainstream UA elevated block */
 .b2c-w2-block{
   background:var(--bg2);border:1px solid var(--line2);
   border-radius:var(--r-lg);overflow:hidden;margin:48px 0;
@@ -815,9 +815,9 @@ a{text-decoration:none;color:inherit;}
   </div>
   <div class="nav-icps">
     <button class="ntab on" data-s="home">Overview</button>
-    <button class="ntab" data-s="b2c">B2C Cryptobanks</button>
-    <button class="ntab" data-s="b2b">B2B Cryptobanks</button>
-    <button class="ntab" data-s="web2">“Web2” Neobanks</button>
+    <button class="ntab" data-s="b2c">Consumer Cryptobanks</button>
+    <button class="ntab" data-s="b2b">Business Cryptobanks</button>
+    <button class="ntab" data-s="web2">Digital Banks</button>
   </div>
   <div class="nav-divider"></div>
   <button class="nav-gtm" data-s="gtm">Go-To-Market Playbook ↗</button>
@@ -851,7 +851,7 @@ a{text-decoration:none;color:inherit;}
 
         <div class="icard" data-s="b2c" tabindex="0" role="button">
           <div class="icard-num">01</div>
-          <div class="icard-tag">B2C Cryptobanks</div>
+          <div class="icard-tag">Consumer Cryptobanks</div>
           <div class="icard-title">Crypto card or stablecoin spending app</div>
           <div class="icard-desc">Think Kast, RedotPay, EtherFi. Product works, users are real . The Web3-native ceiling is closer than it looks.</div>
           <div class="icard-cta">See how we&rsquo;d grow you &rarr;</div>
@@ -859,7 +859,7 @@ a{text-decoration:none;color:inherit;}
 
         <div class="icard" data-s="b2b" tabindex="0" role="button">
           <div class="icard-num">02</div>
-          <div class="icard-tag">B2B Cryptobanks</div>
+          <div class="icard-tag">Business Cryptobanks</div>
           <div class="icard-title">Business banking for global operators</div>
           <div class="icard-desc">Your users are the entrepreneurs, agencies, and contractors getting killed by wire fees and slow settlement. The banking rails exist. The distribution doesn’t.</div>
           <div class="icard-cta">See how we&rsquo;d grow you &rarr;</div>
@@ -867,8 +867,8 @@ a{text-decoration:none;color:inherit;}
 
         <div class="icard" data-s="web2" tabindex="0" role="button">
           <div class="icard-num">03</div>
-          <div class="icard-tag">“Web2” Neobanks</div>
-          <div class="icard-title">Digital bank exploring on-chain rails</div>
+          <div class="icard-tag">Digital Banks</div>
+          <div class="icard-title">Established neobank exploring crypto rails</div>
           <div class="icard-desc">Think Mercury, Wise, Revolut. Watching $759M/month in crypto card spend from the sidelines and wondering when to move.</div>
           <div class="icard-cta">See what&rsquo;s on the table &rarr;</div>
         </div>
@@ -935,7 +935,7 @@ a{text-decoration:none;color:inherit;}
     <div class="w">
       <div class="b2c-eyebrow">Crypto cards &amp; wallet products</div>
       <h2 class="b2c-hero-h">The next 10&times; isn&rsquo;t<br>in your current audience.</h2>
-      <p class="b2c-hero-sub">Kast, RedotPay, and EtherFi built the $759M/month crypto card market. Now all of them are making the same move: shifting toward “Web2” UA and positioning as financial superapps. The Web3-native ceiling is visible, and every incumbent sees it.</p>
+      <p class="b2c-hero-sub">Kast, RedotPay, and EtherFi built the $759M/month crypto card market. Now all of them are making the same move: shifting toward mainstream UA and positioning as financial superapps. The crypto-native ceiling is visible, and every incumbent sees it.</p>
       <div class="b2c-stats-bar">
         <div class="b2c-stat"><div class="b2c-stat-n">$759M</div><div class="b2c-stat-l">Crypto card spend per month</div></div>
           <div class="b2c-stat"><div class="b2c-stat-n">20K&ndash;100K</div><div class="b2c-stat-l">Web3-native users every card competes for</div></div>
@@ -1097,12 +1097,12 @@ a{text-decoration:none;color:inherit;}
 
     </div><!-- /ch-sections -->
 
-    <!-- WEB2 UA — ELEVATED BLOCK -->
+    <!-- MAINSTREAM UA — ELEVATED BLOCK -->
     <div class="b2c-w2-block">
       <div class="b2c-w2-head">
         <div class="b2c-w2-badge">The Undertapped Opportunity</div>
-        <div class="b2c-w2-h">“Web2” User Acquisition</div>
-        <p class="b2c-w2-sub">Every crypto card company is competing in the same six Web3 channels. <strong>None of them have built a “Web2” distribution playbook.</strong> The mainstream user already holding crypto somewhere, already using a card, already listening to a personal finance podcast, is not in their funnel. That user is in yours, if you show up first.</p>
+        <div class="b2c-w2-h">Mainstream User Acquisition</div>
+        <p class="b2c-w2-sub">Every crypto card company is competing in the same six Web3 channels. <strong>None of them have built a mainstream distribution playbook.</strong> The user already holding crypto somewhere, already using a card, already listening to a personal finance podcast, is not in their funnel. That user is in yours, if you show up first.</p>
       </div>
       <div class="b2c-w2-grid">
         <div class="b2c-w2-ch">
@@ -1136,7 +1136,7 @@ a{text-decoration:none;color:inherit;}
           <div class="b2c-w2-ch-desc">Email and push sequences that convert signups to active card users. Most crypto card platforms lose 60&ndash;70% of signups before first spend. A structured lifecycle program closes that gap without additional acquisition budget.</div>
         </div>
       </div>
-      <div class="b2c-w2-insight"><strong>Why this window is still open:</strong> Web3 companies are optimized for Web3 channels. The operator who runs a flawless KOL campaign doesn&rsquo;t know how to rank a landing page. We have both capabilities. The window closes as soon as one well-funded player figures it out.</div>
+      <div class="b2c-w2-insight"><strong>Why this window is still open:</strong> Crypto-native companies are optimized for crypto-native channels. The operator who runs a flawless KOL campaign doesn&rsquo;t know how to rank a landing page. We have both capabilities. The window closes as soon as one well-funded player figures it out.</div>
     </div>
 
     <!-- REDOTPAY CASE STUDY -->
@@ -1168,7 +1168,7 @@ a{text-decoration:none;color:inherit;}
     <div class="b2c-why-now">
       <div class="b2c-wn-head">
         <div class="b2c-wn-lbl">The window</div>
-        <div class="b2c-wn-h">Three reasons the “Web2” UA opportunity is now, not later</div>
+        <div class="b2c-wn-h">Three reasons the mainstream UA opportunity is now, not later</div>
       </div>
       <div class="b2c-wn-rows">
         <div class="b2c-wn-row">
@@ -1177,10 +1177,10 @@ a{text-decoration:none;color:inherit;}
         </div>
         <div class="b2c-wn-row">
           <div class="b2c-wn-row-h">Your competitors are structurally stuck</div>
-          <div class="b2c-wn-row-body">KOL shops and CT agencies cannot pivot to podcast placements and paid acquisition. Web3 distribution teams don&rsquo;t have “Web2” infrastructure. There&rsquo;s no overlap in who knows how to do both.</div>
+          <div class="b2c-wn-row-body">KOL shops and CT agencies cannot pivot to podcast placements and paid acquisition. Web3 distribution teams don&rsquo;t have mainstream distribution infrastructure. There&rsquo;s no overlap in who knows how to do both.</div>
         </div>
         <div class="b2c-wn-row">
-          <div class="b2c-wn-row-h">First-mover in “Web2” channels compounds</div>
+          <div class="b2c-wn-row-h">First-mover in mainstream channels compounds</div>
           <div class="b2c-wn-row-body">SEO authority built this year is a moat. The podcast host who&rsquo;s had you on once thinks of you first. The LinkedIn audience around your founder takes 12 months to replicate. These channels reward early presence with durable returns.</div>
         </div>
       </div>
@@ -1203,7 +1203,7 @@ a{text-decoration:none;color:inherit;}
 
   <div class="b2b-hero">
     <div class="w">
-      <div class="b2b-eyebrow">B2B Cryptobanks</div>
+      <div class="b2b-eyebrow">Business Cryptobanks</div>
       <h2 class="b2b-hero-h">Your buyers aren&rsquo;t on<br><span class="g">Crypto Twitter.</span></h2>
       <p class="b2b-hero-sub">The businesses that need your product search Google, ask ChatGPT, and compare options on LinkedIn. We build the GTM engine that puts you where they actually look.</p>
 
@@ -1355,7 +1355,7 @@ a{text-decoration:none;color:inherit;}
   </div>
 </section>
 
-<!-- ═══════════════ WEB2 NEOBANKS ═══════════════ -->
+<!-- ═══════════════ DIGITAL BANKS ═══════════════ -->
 <section class="sec" id="web2">
   <div class="w">
     <div class="sub">
@@ -1409,7 +1409,7 @@ a{text-decoration:none;color:inherit;}
         <div class="epath">
           <div class="epath-num">03</div>
           <div class="epath-name">Crypto Card &amp; Rewards</div>
-          <div class="epath-thesis">$759M/month in crypto card spend, growing 2.5&times; YoY. Every player today is crypto-native. The “Web2” neobank position is completely unclaimed.</div>
+          <div class="epath-thesis">$759M/month in crypto card spend, growing 2.5&times; YoY. Every player today is crypto-native. The digital bank position is completely unclaimed.</div>
           <div class="epath-facts">
             <div class="epf"><span class="epf-l">Already here</span><span class="epf-v">RedotPay, Kast, EtherFi, Nexo, Bitget Card</span></div>
             <div class="epf"><span class="epf-l">Revenue</span><span class="epf-v">Interchange (1.5&ndash;2%) + FX conversion spread</span></div>
@@ -1539,7 +1539,7 @@ a{text-decoration:none;color:inherit;}
       <div class="gtm-col">
         <div class="gtm-col-top">
           <div class="gtm-col-lbl">Channel two</div>
-          <div class="gtm-col-h">“Web2” Distribution</div>
+          <div class="gtm-col-h">Mainstream Distribution</div>
         </div>
         <div class="gtm-item">
           <div class="gtm-item-name">LinkedIn: Personal Brand as BD</div>
@@ -1551,7 +1551,7 @@ a{text-decoration:none;color:inherit;}
         </div>
         <div class="gtm-item">
           <div class="gtm-item-name">Partnerships &amp; Co-Marketing</div>
-          <div class="gtm-item-desc">Referral network structures, co-marketing arrangements, and embedded product deals with adjacent “Web2” platforms. The same partnership logic that drives Web3 co-marketing, applied to traditional fintech distribution.</div>
+          <div class="gtm-item-desc">Referral network structures, co-marketing arrangements, and embedded product deals with adjacent fintech platforms. The same partnership logic that drives Web3 co-marketing, applied to mainstream fintech distribution.</div>
         </div>
         <div class="gtm-item">
           <div class="gtm-item-name">Podcast Placement</div>
@@ -1566,8 +1566,8 @@ a{text-decoration:none;color:inherit;}
 
     <div class="bridge">
       <h3>Where the two worlds connect</h3>
-      <p>For <strong>B2C and B2B Cryptobanks</strong>: “Web2” is almost entirely unclaimed by your competitors. LinkedIn, podcasts, and paid distribution reach an audience orders of magnitude larger than any Web3 community, and they’re increasingly ready for what you’ve built. The window to establish category authority in these channels is still open.</p>
-      <p>For <strong>“Web2” Neobanks entering crypto</strong>: the Web3 distribution world is wide-open territory for you. You arrive carrying mainstream users that Web3 projects have been trying to acquire for years. That makes you a distribution partner with real leverage, with access to audiences no competitor is also targeting.</p>
+      <p>For <strong>Consumer and Business Cryptobanks</strong>: mainstream distribution is almost entirely unclaimed by your competitors. LinkedIn, podcasts, and paid distribution reach an audience orders of magnitude larger than any Web3 community, and they’re increasingly ready for what you’ve built. The window to establish category authority in these channels is still open.</p>
+      <p>For <strong>Digital Banks entering crypto</strong>: the Web3 distribution world is wide-open territory for you. You arrive carrying mainstream users that Web3 projects have been trying to acquire for years. That makes you a distribution partner with real leverage, with access to audiences no competitor is also targeting.</p>
     </div>
 
     <div class="scta">
